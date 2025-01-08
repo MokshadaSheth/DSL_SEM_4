@@ -1,0 +1,24 @@
+//============================================================================
+// Name        : Prac1_Polynomial.cpp
+// Author      : 21467
+// Version     : 1
+// Copyright   : Your copyright notice
+// Description : Doubly LL implementation for polynomial
+//============================================================================
+
+#include <iostream>
+using namespace std;
+
+class Node
+{
+	int coef;
+	int exp;
+	Node *next,*prev;
+
+	friend class Poly;
+};
+
+class Poly
+{
+
+};

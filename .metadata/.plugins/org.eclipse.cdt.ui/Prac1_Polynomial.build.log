@@ -1,0 +1,15 @@
+15:34:46 **** Incremental Build of configuration Debug for project Prac1_Polynomial ****
+make all 
+Building file: ../src/Prac1_Polynomial.cpp
+Invoking: GCC C++ Compiler
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Prac1_Polynomial.d" -MT"src/Prac1_Polynomial.o" -o "src/Prac1_Polynomial.o" "../src/Prac1_Polynomial.cpp"
+Finished building: ../src/Prac1_Polynomial.cpp
+ 
+Building target: Prac1_Polynomial
+Invoking: GCC C++ Linker
+g++  -o "Prac1_Polynomial"  ./src/Prac1_Polynomial.o   
+Finished building target: Prac1_Polynomial
+ 
+
+15:34:47 Build Finished. 0 errors, 0 warnings. (took 917ms)
+
