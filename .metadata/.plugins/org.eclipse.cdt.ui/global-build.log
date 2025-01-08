@@ -1,12 +1,10 @@
-15:34:46 **** Incremental Build of configuration Debug for project Prac1_Polynomial ****
+15:06:14 **** Build of configuration Debug for project Assignment1_Binary_Tree ****
 make all 
-Building file: ../src/Prac1_Polynomial.cpp
+Building file: ../src/Assignment1_Binary_Tree.cpp
 Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Prac1_Polynomial.d" -MT"src/Prac1_Polynomial.o" -o "src/Prac1_Polynomial.o" "../src/Prac1_Polynomial.cpp"
-Finished building: ../src/Prac1_Polynomial.cpp
- 
-Building target: Prac1_Polynomial
-Invoking: GCC C++ Linker
-g++  -o "Prac1_Polynomial"  ./src/Prac1_Polynomial.o   
-Finished building target: Prac1_Polynomial
- 
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment1_Binary_Tree.d" -MT"src/Assignment1_Binary_Tree.o" -o "src/Assignment1_Binary_Tree.o" "../src/Assignment1_Binary_Tree.cpp"
+../src/Assignment1_Binary_Tree.cpp:34:2: error: ‘allNodes’ does not name a type
+   34 |  allNodes[0] = root;
+      |  ^~~~~~~~
+make: *** [src/subdir.mk:20: src/Assignment1_Binary_Tree.o] Error 1
+"make all" terminated with exit code 2. Build might be incomplete.
