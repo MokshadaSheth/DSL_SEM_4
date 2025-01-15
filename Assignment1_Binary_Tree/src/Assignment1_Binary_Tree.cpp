@@ -9,6 +9,7 @@
 #include <iostream>
 using namespace std;
 
+
 class Node
 {
 	Node *prev; //Parent
@@ -26,7 +27,52 @@ public:
 	Node(int d): prev(nullptr),left(nullptr),right(nullptr),data(d){}
 
 	friend class BinaryTree;
+	friend class Queue;
 };
+
+class Queue
+{
+	Node *visitedNodes;
+	int front,rear;
+
+public:
+	Queue()
+	{
+		visitedNodes = new Node[20];
+		front = -1;
+		rear = -1;
+	}
+
+	void enqueue(Node *d)
+	{
+		if(front == -1)
+		{
+			front = rear = 0;
+		}
+		else
+		{
+			rear++;
+		}
+		visitedNodes[rear] = *d;
+	}
+	Node dequeue()
+	{
+		Node toReturn = visitedNodes[front];
+//		delete visitedNodes[front];
+		if(front ==rear)
+		{
+			front = rear = -1;
+		}
+		else
+		{
+			front++;
+		}
+		return toReturn;
+	}
+	friend class BinaryTree;
+
+};
+
 class BinaryTree
 {
 	Node *root=nullptr;
@@ -34,10 +80,13 @@ class BinaryTree
 	Node *allNodes[15];
 	int i=0;
 
+	static int totalNodes;
+
 public:
 	void createTree(int data);
 	void display();
 };
+int BinaryTree :: totalNodes = 0;
 void BinaryTree :: createTree(int data)
 {
 	if(root == nullptr)
@@ -46,23 +95,26 @@ void BinaryTree :: createTree(int data)
 		allNodes[i] = root;
 		current = allNodes[i];
 		i++;
+		totalNodes++;
 	}
 	else
 	{
 		Node *newNode = new Node(data);
 		current = root;
+		cout<<"Data of root"<<root->data;
 		while(true)
 		{
 			char choice;
-			cout<<"\nYou want to insert data to left or right(l/r) of node "<<current->data<<": ";
+			cout<<"\nYou want to insert data to left or right(l/r) of node: "<<current->data<<": ";
 			cin>>choice;
 			switch(choice)
 			{
 			case 'l':
 				if(current->left == nullptr)
 				{
-					cout<<"\nInserting after "<<current->data;
+					cout<<"\nInserting after:  "<<current->data;
 					current->left = newNode;
+					totalNodes++;
 					return;
 
 				}
@@ -71,7 +123,15 @@ void BinaryTree :: createTree(int data)
 
 				break;
 			case 'r':
-
+				if(current->right == nullptr)
+				{
+					cout<<"\nInserting after: "<<current->data;
+					current->right = newNode;
+					totalNodes++;
+					return;
+				}
+				current = current->right;
+				cout<<"\nRight is not null..\n";
 				break;
 			default:
 				cout<<"\nInvalid choice";
@@ -81,6 +141,62 @@ void BinaryTree :: createTree(int data)
 
 	}
 }
+void BinaryTree :: display()
+{
+	Node *temp = new Node;
+	temp = root;
+	Queue obj;
+	int *valuesInTree = new int[totalNodes];
+	int i=0;
+	obj.enqueue(temp);
+	while(obj.front != -1)
+	{
+		*temp = obj.visitedNodes[obj.front];
+
+		valuesInTree[i] = temp->data;
+		i++;
+
+		if(temp->left != nullptr)
+		{
+			obj.enqueue(temp->left);
+		}
+		if(temp->right != nullptr)
+		{
+			obj.enqueue(temp->right);
+		}
+		obj.dequeue();
+	}
+	temp = root;
+	cout<<"BFS Traversal: \n";
+	for(int i=0; i<totalNodes;i++)
+	{
+		cout<<"  "<<valuesInTree[i];
+	}
+	cout<<"Root: "<<root->data;
+	 delete[] valuesInTree;
+}
 int main() {
 
+		BinaryTree obj;
+		int choice;
+		do{
+			cout<<"\n1.Insert Data\n2.Display\n3.Exit\n\nEnter choice code: ";
+			cin>>choice;
+			switch(choice)
+			{
+			case 1:
+				int data;
+				cout<<"\nEnter Data: ";
+				cin>>data;
+				obj.createTree(data);
+				break;
+			case 2:
+				obj.display();
+				break;
+			case 3:
+				cout<<"\nByeee.....";
+			}
+		}while(choice!=3);
+
+		return 0;
 }
