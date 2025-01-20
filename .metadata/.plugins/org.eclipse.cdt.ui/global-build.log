@@ -1,4 +1,10 @@
-15:21:32 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
+15:40:43 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
+make all 
+make: Nothing to be done for 'all'.
+15:40:47 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
+make all 
+make: Nothing to be done for 'all'.
+15:42:27 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
 make all 
 Building file: ../src/Assignment1_Binary_Tree.cpp
 Invoking: GCC C++ Compiler
@@ -10,55 +16,7 @@ Invoking: GCC C++ Linker
 g++  -o "Assignment1_Binary_Tree"  ./src/Assignment1_Binary_Tree.o   
 Finished building target: Assignment1_Binary_Tree
  
-15:22:26 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
-make all 
-Building file: ../src/Assignment1_Binary_Tree.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment1_Binary_Tree.d" -MT"src/Assignment1_Binary_Tree.o" -o "src/Assignment1_Binary_Tree.o" "../src/Assignment1_Binary_Tree.cpp"
-Finished building: ../src/Assignment1_Binary_Tree.cpp
- 
-Building target: Assignment1_Binary_Tree
-Invoking: GCC C++ Linker
-g++  -o "Assignment1_Binary_Tree"  ./src/Assignment1_Binary_Tree.o   
-Finished building target: Assignment1_Binary_Tree
- 
-15:29:17 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
-make all 
-Building file: ../src/Assignment1_Binary_Tree.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment1_Binary_Tree.d" -MT"src/Assignment1_Binary_Tree.o" -o "src/Assignment1_Binary_Tree.o" "../src/Assignment1_Binary_Tree.cpp"
-Finished building: ../src/Assignment1_Binary_Tree.cpp
- 
-Building target: Assignment1_Binary_Tree
-Invoking: GCC C++ Linker
-g++  -o "Assignment1_Binary_Tree"  ./src/Assignment1_Binary_Tree.o   
-Finished building target: Assignment1_Binary_Tree
- 
-15:30:30 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
-make all 
-Building file: ../src/Assignment1_Binary_Tree.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment1_Binary_Tree.d" -MT"src/Assignment1_Binary_Tree.o" -o "src/Assignment1_Binary_Tree.o" "../src/Assignment1_Binary_Tree.cpp"
-Finished building: ../src/Assignment1_Binary_Tree.cpp
- 
-Building target: Assignment1_Binary_Tree
-Invoking: GCC C++ Linker
-g++  -o "Assignment1_Binary_Tree"  ./src/Assignment1_Binary_Tree.o   
-Finished building target: Assignment1_Binary_Tree
- 
-15:30:58 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
-make all 
-Building file: ../src/Assignment1_Binary_Tree.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment1_Binary_Tree.d" -MT"src/Assignment1_Binary_Tree.o" -o "src/Assignment1_Binary_Tree.o" "../src/Assignment1_Binary_Tree.cpp"
-Finished building: ../src/Assignment1_Binary_Tree.cpp
- 
-Building target: Assignment1_Binary_Tree
-Invoking: GCC C++ Linker
-g++  -o "Assignment1_Binary_Tree"  ./src/Assignment1_Binary_Tree.o   
-Finished building target: Assignment1_Binary_Tree
- 
-15:32:24 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
+15:43:51 **** Incremental Build of configuration Debug for project Assignment1_Binary_Tree ****
 make all 
 Building file: ../src/Assignment1_Binary_Tree.cpp
 Invoking: GCC C++ Compiler

@@ -148,13 +148,11 @@ void BinaryTree :: preorder()
 
 void BinaryTree :: inorder()
 {
-	cout<<"\nInside func";
 	Stack obj;
 	Node *temp = root;
 
 	while(true)
 	{
-		cout<<"\nInside Infiy";
 		while(temp != nullptr)
 		{
 			obj.push(temp);
@@ -162,12 +160,14 @@ void BinaryTree :: inorder()
 		}
 		if(obj.top == -1)
 		{
+			cout<<"\nInorder Traversal Completed\n";
 			break;
 		}
 		else
 		{
+			temp = obj.pop(); // IMP first pop
 			cout<<temp->data<<" ";
-			temp = obj.pop();
+
 			temp = temp->right;
 		}
 	}
