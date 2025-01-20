@@ -28,6 +28,7 @@ public:
 
 	friend class BinaryTree;
 	friend class Queue;
+	friend class Stack;
 };
 
 class Queue
@@ -73,6 +74,29 @@ public:
 
 };
 
+class Stack
+{
+	Node *st;
+	int top;
+public:
+	Stack()
+	{
+		st = new Node[20];
+		top = -1;
+	}
+
+	void push(Node *data)
+	{
+		top++;
+		st[top] = *data;
+	}
+	Node* pop()
+	{
+		return &st[top--];
+	}
+	friend class BinaryTree;
+};
+
 class BinaryTree
 {
 	Node *root=nullptr;
@@ -85,8 +109,70 @@ class BinaryTree
 public:
 	void createTree(int data);
 	void display();
+	void preorder();
+	void inorder();
 };
 int BinaryTree :: totalNodes = 0;
+
+void BinaryTree :: preorder()
+{
+	Stack obj;
+	Node *temp = root;
+	while(true)
+	{
+		while(temp!=nullptr)
+		{
+					cout<<temp->data<<" ";
+					if(temp->right != nullptr)
+					{
+						obj.push(temp->right);
+
+					}
+
+					temp = temp->left;
+
+		}
+		if(obj.top == -1)
+		{
+			cout<<"\nPreorder Traversal Completed\n";
+			return;
+		}
+		else
+		{
+			temp = obj.pop();
+		}
+
+	}
+
+}
+
+void BinaryTree :: inorder()
+{
+	cout<<"\nInside func";
+	Stack obj;
+	Node *temp = root;
+
+	while(true)
+	{
+		cout<<"\nInside Infiy";
+		while(temp != nullptr)
+		{
+			obj.push(temp);
+			temp = temp -> left;
+		}
+		if(obj.top == -1)
+		{
+			break;
+		}
+		else
+		{
+			cout<<temp->data<<" ";
+			temp = obj.pop();
+			temp = temp->right;
+		}
+	}
+}
+
 void BinaryTree :: createTree(int data)
 {
 	if(root == nullptr)
@@ -180,7 +266,7 @@ int main() {
 		BinaryTree obj;
 		int choice;
 		do{
-			cout<<"\n1.Insert Data\n2.Display\n3.Exit\n\nEnter choice code: ";
+			cout<<"\n1.Insert Data\n2.Display\n3.Preorder\n4.Inorder\n5.Postorder\n6.Exit\n\nEnter choice code: ";
 			cin>>choice;
 			switch(choice)
 			{
@@ -194,9 +280,18 @@ int main() {
 				obj.display();
 				break;
 			case 3:
+				obj.preorder();
+				break;
+			case 4:
+				obj.inorder();
+				break;
+			case 5:
+				break;
+
+			case 6:
 				cout<<"\nByeee.....";
 			}
-		}while(choice!=3);
+		}while(choice!=6);
 
 		return 0;
 }
