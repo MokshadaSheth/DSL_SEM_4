@@ -43,7 +43,7 @@ public:
 		front = -1;
 		rear = -1;
 	}
-
+	//Note: Add queue full and queue empty condition
 	void enqueue(Node *d)
 	{
 		if(front == -1)
@@ -79,6 +79,7 @@ class Stack
 	Node *st;
 	int top;
 public:
+	//Note add stack full and empty condition
 	Stack()
 	{
 		st = new Node[20];
@@ -111,6 +112,7 @@ public:
 	void display();
 	void preorder();
 	void inorder();
+	void postorder();
 };
 int BinaryTree :: totalNodes = 0;
 
@@ -169,6 +171,31 @@ void BinaryTree :: inorder()
 			cout<<temp->data<<" ";
 
 			temp = temp->right;
+		}
+	}
+}
+
+void BinaryTree :: postorder()
+{
+	Stack obj;
+	Stack obj2;
+	Node *temp = root;
+	while(true)
+	{
+		while(temp!=nullptr)
+		{
+			obj.push(temp);
+			temp = temp->left;
+		}
+		if(obj.top == -1)
+		{
+			cout<<"\nPostorder Traversal Completed!";
+			return;
+		}
+		else
+		{
+			temp = obj.pop();
+			obj2.push(temp);
 		}
 	}
 }
