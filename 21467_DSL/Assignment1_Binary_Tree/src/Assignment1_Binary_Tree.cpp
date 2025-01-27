@@ -46,32 +46,48 @@ public:
 	//Note: Add queue full and queue empty condition
 	void enqueue(Node *d)
 	{
-		if(front == -1)
+		if(rear == 20)
 		{
-			front = rear = 0;
+			cout<<"\nQueue is full";
+			
 		}
-		else
+		else 
 		{
-			rear++;
+			if(front == -1)
+			{
+				front = rear = 0;
+			}
+			else
+			{
+				rear++;
+			}
+			visitedNodes[rear] = *d;
 		}
-		visitedNodes[rear] = *d;
 	}
 	Node dequeue()
 	{
-		Node toReturn = visitedNodes[front];
-//		delete visitedNodes[front];
-		if(front ==rear)
+		
+		if(front == -1)
 		{
-			front = rear = -1;
+			cout<<"Queue is empty";
+			return NULL;
 		}
 		else
 		{
-			front++;
+			Node toReturn = visitedNodes[front];
+			if(front ==rear)
+			{
+				front = rear = -1;
+			}
+			else
+			{
+				front++;
+			}
+			return toReturn;
 		}
-		return toReturn;
+		
 	}
 	friend class BinaryTree;
-
 };
 
 class Stack
@@ -88,12 +104,25 @@ public:
 
 	void push(Node *data)
 	{
-		top++;
-		st[top] = *data;
+		if(top == 20) //Stack full
+		{
+			cout<<"\nStack is Full";
+		}
+		else
+		{
+			top++;
+			st[top] = *data;
+		}	
 	}
 	Node* pop()
 	{
-		return &st[top--];
+		if(top == -1)
+		{
+			cout<<"\nStack is empty";
+		}
+		else{
+			return &st[top--];
+		}
 	}
 	friend class BinaryTree;
 };
@@ -177,27 +206,29 @@ void BinaryTree :: inorder()
 
 void BinaryTree :: postorder()
 {
+	if (!root) {
+        cout << "Tree is empty!" << endl;
+        return;
+    }
 	Stack obj;
 	Stack obj2;
 	Node *temp = root;
-	while(true)
-	{
-		while(temp!=nullptr)
+	obj.push(root);
+		while(obj.top != -1)
 		{
-			obj.push(temp);
-			temp = temp->left;
+			temp = obj.pop(); 
+			obj2.push(temp);     //Storing elements in reverse order in stack
+
+			if(temp->left)
+				obj.push(temp->left);
+			if(temp->right)
+				obj.push(temp->right);
 		}
-		if(obj.top == -1)
+		while(obj2.top != -1)
 		{
-			cout<<"\nPostorder Traversal Completed!";
-			return;
+			temp = obj2.pop();
+			cout<<"  "<<temp->data;
 		}
-		else
-		{
-			temp = obj.pop();
-			obj2.push(temp);
-		}
-	}
 }
 
 void BinaryTree :: createTree(int data)
@@ -313,6 +344,7 @@ int main() {
 				obj.inorder();
 				break;
 			case 5:
+				obj.postorder();
 				break;
 
 			case 6:
