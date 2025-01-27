@@ -25,21 +25,22 @@ public:
 		data = 0;
 	}
 	Node(int d): prev(nullptr),left(nullptr),right(nullptr),data(d){}
-
+	
 	friend class BinaryTree;
 	friend class Queue;
 	friend class Stack;
+
+	
 };
 
 class Queue
 {
-	Node *visitedNodes;
+	Node *visitedNodes[20];
 	int front,rear;
 
 public:
 	Queue()
 	{
-		visitedNodes = new Node[20];
 		front = -1;
 		rear = -1;
 	}
@@ -61,10 +62,10 @@ public:
 			{
 				rear++;
 			}
-			visitedNodes[rear] = *d;
+			visitedNodes[rear] = d;
 		}
 	}
-	Node dequeue()
+	Node* dequeue()
 	{
 		
 		if(front == -1)
@@ -74,7 +75,7 @@ public:
 		}
 		else
 		{
-			Node toReturn = visitedNodes[front];
+			Node *toReturn = visitedNodes[front];
 			if(front ==rear)
 			{
 				front = rear = -1;
@@ -92,13 +93,13 @@ public:
 
 class Stack
 {
-	Node *st;
+	Node *st[20]; //IMP Note: that this will creat 20 places to store 2 byte each
+				  //What i was doing was storing 20 locations of type Node which was memory intensive
 	int top;
 public:
 	//Note add stack full and empty condition
 	Stack()
 	{
-		st = new Node[20];
 		top = -1;
 	}
 
@@ -111,7 +112,7 @@ public:
 		else
 		{
 			top++;
-			st[top] = *data;
+			st[top] = data;
 		}	
 	}
 	Node* pop()
@@ -122,7 +123,7 @@ public:
 			return NULL;
 		}
 		
-		return &st[top--];
+		return st[top--];
 		
 	}
 	friend class BinaryTree;
@@ -146,35 +147,85 @@ public:
 	void swap();
 	void height();
 	void internalLeaf();
+	void operator=(Node copyRoot);
 };
 int BinaryTree :: totalNodes = 0;
 
 void BinaryTree :: height()
 {
-	Node *curr = root;
-	Stack s;
-	int height = 0;
-	while(true)
-	{
-		while(curr)
-		{
-			if(curr->right != nullptr)
-			{
-				s.push(curr->right);
-			}
-			if(curr->left != nullptr)
-			{
-				curr = curr ->left;
-				height++;
-			}
-		}
-		
-	}
+	if (root == nullptr) {
+        cout << "\nHeight: 0";  // Empty tree
+        return;
+    }
+
+    cout<<"\nInside height function\n";
+    Node* curr = nullptr;
+    Queue q;
+    int height = 0;
+
+    q.enqueue(root);  // Start with the root node
+
+    while (q.front != -1) {
+    	cout<<"\nInside while loop\n Rear: "<<q.rear;
+        int levelSize = (q.rear - q.front) + 1;  // Number of nodes at current level
+        height++;
+        cout<<"\nLevelSize: "<<levelSize;
+        // Process all nodes at the current level
+        for(int i = 0; i < levelSize; i++) {
+            curr = q.dequeue();
+
+            cout<<"\nInside for loop with level: "<<levelSize;
+
+            // Enqueue the left and right children if they exist
+            if (curr->left != nullptr) {
+                q.enqueue(curr->left);
+            }
+            if (curr->right != nullptr) {
+                q.enqueue(curr->right);
+            }
+        }
+    }
+
+    cout << "\nHeight: " << height;
+
 }
 
 void BinaryTree :: internalLeaf()
 {
+	Node *curr = nullptr;
+	if(root == nullptr)
+	{
+		cout<<"\nNo internal Nodes";
+		
+	}
+	else
+	{
+		int internal=0;
+		int leaf = 0;
+		Queue obj;
+		obj.enqueue(root);
+			while(obj.front != -1)
+			{
+				curr = obj.dequeue();
+				if(curr->left == nullptr && curr->right==nullptr)
+				{
+					leaf++;
+				}
+				else{
+					internal++;
+					if(curr->left !=nullptr)
+					{
+						obj.enqueue(curr->left);
+					}
+					if(curr->right != nullptr)
+					{
+						obj.enqueue(curr->right);
 
+					}
+				}
+			}
+		cout<<"\nInternal Nodes: "<<internal<<"\nLeaf: "<<leaf;
+	}
 }
 void BinaryTree :: swap()
 {
@@ -352,6 +403,7 @@ void BinaryTree :: createTree(int data)
 
 	}
 }
+
 void BinaryTree :: display()
 {
 	Node *temp = new Node;
@@ -362,7 +414,7 @@ void BinaryTree :: display()
 	obj.enqueue(temp);
 	while(obj.front != -1)
 	{
-		*temp = obj.visitedNodes[obj.front];
+		temp = obj.visitedNodes[obj.front];
 
 		valuesInTree[i] = temp->data;
 		i++;
@@ -383,9 +435,9 @@ void BinaryTree :: display()
 	{
 		cout<<"  "<<valuesInTree[i];
 	}
-	cout<<"Root: "<<root->data;
 	 delete[] valuesInTree;
 }
+
 int main() {
 
 		BinaryTree obj;
@@ -403,6 +455,7 @@ int main() {
 				break;
 			case 2:
 				obj.display();
+				// cout<<"\nUnder Construction";
 				break;
 			case 3:
 				obj.preorder();
@@ -417,8 +470,10 @@ int main() {
 				obj.swap();
 				break;
 			case 7:
+				obj.height();
 				break;
 			case 8:
+				obj.internalLeaf();
 				break;
 			case 9:
 				cout<<"\nByeee.....";
@@ -427,3 +482,43 @@ int main() {
 
 		return 0;
 }
+
+
+/*
+
+void BinaryTree::operator=(const BinaryTree& other) {
+    if (this == &other) {
+        // Self-assignment check
+        return;
+    }
+
+    // Clean up the current tree
+    clearTree(root); // Implement clearTree to delete all nodes in the current tree
+
+    // Copy the tree structure
+    root = copyTree(other.root); // Implement copyTree for deep copying
+}
+
+// Helper function to clear the tree
+void BinaryTree::clearTree(Node* node) {
+    if (node != nullptr) {
+        clearTree(node->left);
+        clearTree(node->right);
+        delete node;
+    }
+}
+
+// Helper function to copy a tree
+Node* BinaryTree::copyTree(Node* otherRoot) {
+    if (otherRoot == nullptr) {
+        return nullptr;
+    }
+
+    // Create a new node and recursively copy its children
+    Node* newNode = new Node();
+    newNode->data = otherRoot->data;
+    newNode->left = copyTree(otherRoot->left);
+    newNode->right = copyTree(otherRoot->right);
+    return newNode;
+}
+*/
