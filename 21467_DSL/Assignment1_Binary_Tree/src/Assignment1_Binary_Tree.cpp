@@ -119,10 +119,11 @@ public:
 		if(top == -1)
 		{
 			cout<<"\nStack is empty";
+			return NULL;
 		}
-		else{
-			return &st[top--];
-		}
+		
+		return &st[top--];
+		
 	}
 	friend class BinaryTree;
 };
@@ -142,9 +143,67 @@ public:
 	void preorder();
 	void inorder();
 	void postorder();
+	void swap();
+	void height();
+	void internalLeaf();
 };
 int BinaryTree :: totalNodes = 0;
 
+void BinaryTree :: height()
+{
+	Node *curr = root;
+	Stack s;
+	int height = 0;
+	while(true)
+	{
+		while(curr)
+		{
+			if(curr->right != nullptr)
+			{
+				s.push(curr->right);
+			}
+			if(curr->left != nullptr)
+			{
+				curr = curr ->left;
+				height++;
+			}
+		}
+		
+	}
+}
+
+void BinaryTree :: internalLeaf()
+{
+
+}
+void BinaryTree :: swap()
+{
+	Node *current = root;
+	Stack track;
+	while(true)
+	{
+		while(current)
+		{
+			if(current->left != nullptr || current->right!=nullptr)
+			{
+				Node *t = current->left;
+				current->left = current->right;
+				current->right = t;
+			}
+			
+			if(current->left)
+			{
+				track.push(current->left);
+			}
+			current = current->right;
+		}
+		if(current == nullptr && track.top==-1)
+		{
+			return;
+		}
+		current = track.pop();
+	}
+}
 void BinaryTree :: preorder()
 {
 	Stack obj;
@@ -219,10 +278,18 @@ void BinaryTree :: postorder()
 			temp = obj.pop(); 
 			obj2.push(temp);     //Storing elements in reverse order in stack
 
-			if(temp->left)
+			if(temp->left != nullptr)
+			{
+				cout<<"\nInside temp->left";
 				obj.push(temp->left);
-			if(temp->right)
+			}
+			if(temp->right != nullptr)
+			{
+				cout<<"\nInside temp->right";
 				obj.push(temp->right);
+			}
+			cout<<"\nIn first while\n obj.top: "<<obj.top<<"  obj2.top: "<<obj2.top;
+			
 		}
 		while(obj2.top != -1)
 		{
@@ -324,7 +391,7 @@ int main() {
 		BinaryTree obj;
 		int choice;
 		do{
-			cout<<"\n1.Insert Data\n2.Display\n3.Preorder\n4.Inorder\n5.Postorder\n6.Exit\n\nEnter choice code: ";
+			cout<<"\n1.Insert Data\n2.Display\n3.Preorder\n4.Inorder\n5.Postorder\n6.Swap Tree\n7.Height of tree\n8.Count Internal and Leaf Node\n9.Exit\n\nEnter choice code: ";
 			cin>>choice;
 			switch(choice)
 			{
@@ -346,11 +413,17 @@ int main() {
 			case 5:
 				obj.postorder();
 				break;
-
 			case 6:
+				obj.swap();
+				break;
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
 				cout<<"\nByeee.....";
 			}
-		}while(choice!=6);
+		}while(choice!=9);
 
 		return 0;
 }
