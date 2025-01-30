@@ -13,42 +13,69 @@ syscall
 section .data
 m1 db "Largest Digit is: ",10
 l1 equ $-m1
-numarr db 10h,05h,01h
+numarr db 2h,3h,0cfh
 count db 03h
+cnt db 02h
 
 section .bss
-	
+largest resb 01	
+ans resb 02
 	
 global _start
 section .text
 
 _start:
 
+mov rdi,numarr
+mov al,00h ; Initially it is 0
 
-rw 01,m1,l1
-
-mov rax, 10h
-mov rbx,numarr ;Pointer
-mov byte[count],16
-
-again:
-	rol rax,04h
-	mov dl,al
-	and dl,0Fh
+loop:
+	cmp al,[rdi]
+	ja incPointer         ;------Note:If jg 03 is largest as it considers CF as negative thus use ja
+	mov al,[rdi]  ;if al is not large then only
 	
-	cmp dl,09h
-	jle x
-	add dl,07h
+	incPointer:
+	inc rdi ;always executes
 	
-x:
-	add dl,30h
-	mov [rbx],dl
-	inc rbx
 	dec byte[count]
-	jnz again
-	
-rw 01,numarr,16
+	jnz loop  ;jump again to loop
 
+check:	
+mov byte[largest],al
+	
+call htoa
+
+cont:
+rw 01,m1,l1 ; At end string 
+rw 01,ans,02
+
+jmp exit
+
+;Procedure to convert hex to ascii
+htoa:
+	mov al,byte[largest]
+	mov rbx,ans
+	l:
+		rol al,04h
+		mov dl,al
+		and dl,0Fh
+		
+		cmp dl,09h 
+		jle lessThanNine
+		add dl,07h
+	
+	lessThanNine:
+		add dl,30h        ;Always executes
+		mov [rbx],dl   ; mov answer
+		inc rbx
+		dec byte[cnt]
+		jnz l
+		ansCheck:
+		;mov byte[ans],dl  ; get ascii result back in ans
+		;rw 01,ans,02
+ret 
+
+exit:
 mov rax,60
 mov rdi,00
 syscall
