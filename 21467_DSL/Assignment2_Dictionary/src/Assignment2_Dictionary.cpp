@@ -44,7 +44,7 @@ public:
 
 class BST
 {
-	Node *root;
+	Node *root = nullptr;
 	Node *temp;
 public:
 
@@ -54,7 +54,9 @@ public:
 	void desendingDisplay();
 	void recursiveAscending(Node *node);
 	void recursiveDescending(Node *node);
-	void deleteKey(Node *);
+	Node* helperFindLocation(string k);
+	void deleteKey(string deleteKey);
+	Node* rightMost(Node *t);
 	void updateKey();
 	void numOfComp();
 };
@@ -70,6 +72,7 @@ void BST :: createTree()
 	if(root == nullptr)
 	{
 		root = newNode;
+		return;
 	}
 	else
 	{
@@ -166,6 +169,7 @@ void BST :: updateKey()
 		{
 			Node *newNode = new Node(newKey,temp->value);
 			insertNode(newNode,root);
+			//Note still deletion remaining
 			return;
 		}
 		else if(cmp<0) //newKey is large
@@ -180,24 +184,62 @@ void BST :: updateKey()
 	cout<<"\nKey does not exist to update!!";
 }
 
-void BST :: deleteKey(Node *toDelete)
+Node* BST ::helperFindLocation(string k)  //This function finds location of previos node of k key
 {
-	if(root == nullptr)
+	Node *temp = root;
+	Node *prev = temp;
+	while(temp)
 	{
-		cout<<"\nTree is empty no deletion possible";
-	}
-	else
-	{
-		if(toDelete->left == nullptr && toDelete->right == nullptr) //leaf
+		int cmp = temp->key.compare(k);
+
+		if(cmp == 0) // key found
 		{
-			delete toDelete;
+			return prev; //Direct address of node will be sent as its Node* i.e value at pointer
+		}
+		else if(cmp<0) //newKey is large
+		{
+			prev = temp;
+			temp = temp->right;
 		}
 		else
 		{
-			if( )
+			prev = temp;
+			temp = temp->left;
+		}
+	}
+	return nullptr;
+}
+
+void BST :: deleteKey(string deleteKey)
+{
+	if(root == nullptr)
+	{
+		cout<<"\nTree is empty, no deletion possible";
+	}
+	else
+	{
+		Node *locationDelete = helperFindLocation(deleteKey);
+		if(locationDelete == nullptr)
+		{
+			cout<<"\nKey does not exists in tree to delete";
+		}
+		else{
+			if(locationDelete->left == nullptr)
+			{
+				
+			}
 		}
 
 	}
+}
+
+Node* BST :: rightMost(Node* t)
+{
+	while(t->right != nullptr)
+	{
+		t = t->right;
+	}
+	return t;
 }
 
 int main() {
@@ -221,6 +263,9 @@ int main() {
 			break;
 		case 3:
 			obj.desendingDisplay();
+			break;
+		case 5:
+			obj.deleteKey("a");
 			break;
 		case 6:
 			obj.updateKey();
