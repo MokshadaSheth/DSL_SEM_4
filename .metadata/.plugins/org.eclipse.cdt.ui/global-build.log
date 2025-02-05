@@ -1,116 +1,27 @@
-15:05:22 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
+15:41:36 **** Incremental Build of configuration Debug for project Assignment3_TBST ****
 make all 
-Building file: ../src/Assignment2_Dictionary.cpp
+Building file: ../src/Assignment3_TBST.cpp
 Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-../src/Assignment2_Dictionary.cpp: In constructor ‘Node::Node()’:
-../src/Assignment2_Dictionary.cpp:33:11: error: invalid conversion from ‘char’ to ‘char*’ [-fpermissive]
-   33 |   value = '\0';
-      |           ^~~~
-      |           |
-      |           char
-../src/Assignment2_Dictionary.cpp: In member function ‘void BST::createTree()’:
-../src/Assignment2_Dictionary.cpp:63:30: error: no matching function for call to ‘Node::Node(std::string&, std::string&)’
-   63 |  Node *newNode = new Node(k,v);
-      |                              ^
-../src/Assignment2_Dictionary.cpp:35:2: note: candidate: ‘Node::Node(char*, char*)’
-   35 |  Node(char* k, char* v)
-      |  ^~~~
-../src/Assignment2_Dictionary.cpp:35:13: note:   no known conversion for argument 1 from ‘std::string’ {aka ‘std::__cxx11::basic_string<char>’} to ‘char*’
-   35 |  Node(char* k, char* v)
-      |       ~~~~~~^
-../src/Assignment2_Dictionary.cpp:28:2: note: candidate: ‘Node::Node()’
-   28 |  Node()
-      |  ^~~~
-../src/Assignment2_Dictionary.cpp:28:2: note:   candidate expects 0 arguments, 2 provided
-../src/Assignment2_Dictionary.cpp:20:7: note: candidate: ‘constexpr Node::Node(const Node&)’
-   20 | class Node
-      |       ^~~~
-../src/Assignment2_Dictionary.cpp:20:7: note:   candidate expects 1 argument, 2 provided
-../src/Assignment2_Dictionary.cpp:20:7: note: candidate: ‘constexpr Node::Node(Node&&)’
-../src/Assignment2_Dictionary.cpp:20:7: note:   candidate expects 1 argument, 2 provided
-make: *** [src/subdir.mk:20: src/Assignment2_Dictionary.o] Error 1
-"make all" terminated with exit code 2. Build might be incomplete.
-15:09:07 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
-make all 
-Building file: ../src/Assignment2_Dictionary.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-Finished building: ../src/Assignment2_Dictionary.cpp
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment3_TBST.d" -MT"src/Assignment3_TBST.o" -o "src/Assignment3_TBST.o" "../src/Assignment3_TBST.cpp"
+Finished building: ../src/Assignment3_TBST.cpp
  
-Building target: Assignment2_Dictionary
+Building target: Assignment3_TBST
 Invoking: GCC C++ Linker
-g++  -o "Assignment2_Dictionary"  ./src/Assignment2_Dictionary.o   
-Finished building target: Assignment2_Dictionary
+g++  -o "Assignment3_TBST"  ./src/Assignment3_TBST.o   
+Finished building target: Assignment3_TBST
  
-15:10:00 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
+15:41:41 **** Incremental Build of configuration Debug for project Assignment3_TBST ****
 make all 
-Building file: ../src/Assignment2_Dictionary.cpp
+make: Nothing to be done for 'all'.
+15:42:38 **** Incremental Build of configuration Debug for project Assignment3_TBST ****
+make all 
+Building file: ../src/Assignment3_TBST.cpp
 Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-Finished building: ../src/Assignment2_Dictionary.cpp
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment3_TBST.d" -MT"src/Assignment3_TBST.o" -o "src/Assignment3_TBST.o" "../src/Assignment3_TBST.cpp"
+Finished building: ../src/Assignment3_TBST.cpp
  
-Building target: Assignment2_Dictionary
+Building target: Assignment3_TBST
 Invoking: GCC C++ Linker
-g++  -o "Assignment2_Dictionary"  ./src/Assignment2_Dictionary.o   
-Finished building target: Assignment2_Dictionary
- 
-15:26:52 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
-make all 
-Building file: ../src/Assignment2_Dictionary.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-../src/Assignment2_Dictionary.cpp: In member function ‘void BST::ascendingDisplay()’:
-../src/Assignment2_Dictionary.cpp:162:17: error: ‘class Node’ has no member named ‘data’
-  162 |     cout<<temp->data<<" ";
-      |                 ^~~~
-make: *** [src/subdir.mk:20: src/Assignment2_Dictionary.o] Error 1
-"make all" terminated with exit code 2. Build might be incomplete.
-15:27:37 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
-make all 
-Building file: ../src/Assignment2_Dictionary.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-Finished building: ../src/Assignment2_Dictionary.cpp
- 
-Building target: Assignment2_Dictionary
-Invoking: GCC C++ Linker
-g++  -o "Assignment2_Dictionary"  ./src/Assignment2_Dictionary.o   
-Finished building target: Assignment2_Dictionary
- 
-15:29:19 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
-make all 
-Building file: ../src/Assignment2_Dictionary.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-Finished building: ../src/Assignment2_Dictionary.cpp
- 
-Building target: Assignment2_Dictionary
-Invoking: GCC C++ Linker
-g++  -o "Assignment2_Dictionary"  ./src/Assignment2_Dictionary.o   
-Finished building target: Assignment2_Dictionary
- 
-15:34:06 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
-make all 
-Building file: ../src/Assignment2_Dictionary.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-Finished building: ../src/Assignment2_Dictionary.cpp
- 
-Building target: Assignment2_Dictionary
-Invoking: GCC C++ Linker
-g++  -o "Assignment2_Dictionary"  ./src/Assignment2_Dictionary.o   
-Finished building target: Assignment2_Dictionary
- 
-15:34:24 **** Incremental Build of configuration Debug for project Assignment2_Dictionary ****
-make all 
-Building file: ../src/Assignment2_Dictionary.cpp
-Invoking: GCC C++ Compiler
-g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Assignment2_Dictionary.d" -MT"src/Assignment2_Dictionary.o" -o "src/Assignment2_Dictionary.o" "../src/Assignment2_Dictionary.cpp"
-Finished building: ../src/Assignment2_Dictionary.cpp
- 
-Building target: Assignment2_Dictionary
-Invoking: GCC C++ Linker
-g++  -o "Assignment2_Dictionary"  ./src/Assignment2_Dictionary.o   
-Finished building target: Assignment2_Dictionary
+g++  -o "Assignment3_TBST"  ./src/Assignment3_TBST.o   
+Finished building target: Assignment3_TBST
  

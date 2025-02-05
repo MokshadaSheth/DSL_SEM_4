@@ -42,14 +42,12 @@ public:
 class TBST
 {
 	Node *head = new Node();
-
-
 public:
 	Node *root;
 	void createTree(int d);
 	void insertNode(Node *newnode, Node *currentParent);
 	void inorder(Node *node);
-	void preorder(Node *node);
+	void preorder();
 };
 
 void TBST :: createTree(int d)
@@ -59,8 +57,10 @@ void TBST :: createTree(int d)
 	{
 		root = newNode;
 		head->lthread = root;
+		head->rthread = head; //Point to self
 		root->lthread = head;
 		root->rthread = head;
+		head->isLchild = true;
 	}
 	else
 	{
@@ -110,27 +110,42 @@ void TBST :: inorder(Node *node){
 		cout<<"  "<<node->data;
 		if(node->isRchild==true) inorder(node->rthread);
 	}
+	//	cout<<"Inside pre-order";
+	//	if(node)
+	//	{
+	//		cout<<"  "<<node->data;
+	//		if(node->isLchild == true) inorder(node->lthread);
+	//		if(node->isRchild==true) inorder(node->rthread);
+	//
+	//	}
+
 }
-void TBST::preorder(Node *node)
+void TBST::preorder()
 {
-	while(node!=head)
-	{
-		 	cout<<"  "<<node->data;
+	Node *temp = root;
+		// since circular last node connected back to head
+		while(temp!=head){
+			cout<<temp->data<<endl;
+			if(temp->isLchild){
+				temp = temp->lthread;
+			}
+			else{
+				if(temp->isRchild){
+					temp = temp->rthread;
+				}
+				else{
+					while(temp->isRchild != true){
+									temp = temp->rthread;
+								}
+								temp = temp->rthread;
+				}
+				// find the inorder successor last node connected to parent
 
-			if(node->isLchild == true)
-			{
-				node = node->lthread;
 			}
-			else if(node->isRchild == true)
-			{
-				node = node->rthread;
-			}
-			else
-			{
-				node = node->rthread;
 
-			}
-	}
+		}
+//	cout<<"root->data"<<root->data<<"\nroot->lthread "<<root->lthread->data<<"\nroot->lthread->rthread "<<root->lthread->rthread->data;
+//	cout<<"\nroot->rthread->data "<<root->rthread->data<<"r thread ka succ: "<<root->rthread->rthread->data;
 }
 
 int main() {
@@ -153,11 +168,15 @@ int main() {
 			obj.inorder(obj.root);
 			break;
 		case 3:
-			obj.preorder(obj.root);
+			cout<<"\nAbout to call pre order";
+			obj.preorder();
 			break;
 		case 5:
 			cout<<"\n\nbyee";
 			break;
+
+		default:
+			cout<<"\nInvalid choice code";
 		}
 	}while(choice!=5);
 
