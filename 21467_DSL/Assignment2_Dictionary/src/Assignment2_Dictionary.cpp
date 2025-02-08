@@ -42,40 +42,23 @@ public:
 	friend class BST;
 };
 
-class Stack
-{
-	Node *st;
-	int top;
-public:
-	//Note add stack full and empty condition
-	Stack()
-	{
-		st = new Node[20];
-		top = -1;
-	}
-
-	void push(Node *data)
-	{
-		top++;
-		st[top] = *data;
-	}
-	Node* pop()
-	{
-		return &st[top--];
-	}
-	friend class BST;
-};
-
-
 class BST
 {
-	Node *root;
+	Node *root = nullptr;
 	Node *temp;
 public:
 
 	void createTree();
 	void insertNode(Node *newNode, Node *r);
 	void ascendingDisplay();
+	void desendingDisplay();
+	void recursiveAscending(Node *node);
+	void recursiveDescending(Node *node);
+	Node* helperFindLocation(string k);
+	void deleteKey(string deleteKey);
+	Node* rightMost(Node *t);
+	void updateKey();
+	void numOfComp();
 };
 
 void BST :: createTree()
@@ -89,6 +72,7 @@ void BST :: createTree()
 	if(root == nullptr)
 	{
 		root = newNode;
+		return;
 	}
 	else
 	{
@@ -141,29 +125,121 @@ void BST :: insertNode(Node *newNode, Node *r)
 
 void BST :: ascendingDisplay()
 {
-		Stack obj;
-		Node *temp = root;
+	recursiveAscending(root);
+}
+void BST :: recursiveAscending(Node *node)
+{
+	if(node)
+	{
+		recursiveAscending(node->left);
+		cout<<"  "<<node->key<<"-->"<<node->value<<"\n";
+		recursiveAscending(node->right);
+	}
+}
 
-		while(true)
+void BST :: recursiveDescending(Node *node)
+{
+	if(node)
+	{
+		recursiveDescending(node->right);
+		cout<<"  "<<node->key<<"-->"<<node->value<<"\n";
+		recursiveDescending(node->left);
+	}
+}
+void BST :: desendingDisplay()
+{
+	recursiveDescending(root);
+}
+
+void BST :: updateKey()
+{
+	string toUpdate,newKey;
+	cout<<"\nEnter key to be updated: ";
+	cin>>toUpdate;
+	cout<<"\nEnter new key: ";
+	cin>>newKey;
+
+	Node *temp = root;
+	while(temp)
+	{
+		//First need to find location of old key
+		int cmp = temp->key.compare(toUpdate);
+
+		if(cmp == 0) // key found
 		{
-			while(temp != nullptr)
-			{
-				obj.push(temp);
-				temp = temp -> left;
-			}
-			if(obj.top == -1)
-			{
-				cout<<"\nInorder Traversal Completed\n";
-				break;
-			}
-			else
-			{
-				temp = obj.pop(); // IMP first pop
-				cout<<temp->key<<"-->"<<temp->value<<endl;
+			Node *newNode = new Node(newKey,temp->value);
+			insertNode(newNode,root);
+			//Note still deletion remaining
+			return;
+		}
+		else if(cmp<0) //newKey is large
+		{
+			temp = temp->right;
+		}
+		else
+		{
+			temp = temp->left;
+		}
+	}
+	cout<<"\nKey does not exist to update!!";
+}
 
-				temp = temp->right;
+Node* BST ::helperFindLocation(string k)  //This function finds location of previos node of k key
+{
+	Node *temp = root;
+	Node *prev = temp;
+	while(temp)
+	{
+		int cmp = temp->key.compare(k);
+
+		if(cmp == 0) // key found
+		{
+			return prev; //Direct address of node will be sent as its Node* i.e value at pointer
+		}
+		else if(cmp<0) //newKey is large
+		{
+			prev = temp;
+			temp = temp->right;
+		}
+		else
+		{
+			prev = temp;
+			temp = temp->left;
+		}
+	}
+	return nullptr;
+}
+
+void BST :: deleteKey(string deleteKey)
+{
+	if(root == nullptr)
+	{
+		cout<<"\nTree is empty, no deletion possible";
+	}
+	else
+	{
+		Node *locationDelete = helperFindLocation(deleteKey);
+		if(locationDelete == nullptr)
+		{
+			cout<<"\nKey does not exists in tree to delete";
+		}
+		else{
+			if(locationDelete->left == nullptr)
+			{
+				
 			}
 		}
+
+	}
+}
+
+Node* BST :: rightMost(Node* t)
+{
+	while(t->right != nullptr)
+	{
+		t = t->right;
+	}
+	return t;
 }
 
 int main() {
@@ -172,7 +248,7 @@ int main() {
 	int choice;
 	do
 	{
-		cout<<"\n1.Insert Data\n2.Ascending Display\n3.Decending Display\n4.No. of Max Cmp\n5.Exit\n";
+		cout<<"\n1.Insert Data\n2.Ascending Display\n3.Descending Display\n4.No. of Max Cmp\n5.Delete Key\n6.Update Key\n7.Exit\n";
 		cout<<"\n\nEnter choice code: ";
 		cin>>choice;
 
@@ -185,13 +261,22 @@ int main() {
 		case 2:
 			obj.ascendingDisplay();
 			break;
+		case 3:
+			obj.desendingDisplay();
+			break;
 		case 5:
+			obj.deleteKey("a");
+			break;
+		case 6:
+			obj.updateKey();
+			break;
+		case 7:
 			cout<<"\nBye";
 			break;
 		default:
 			cout<<"\nInvalid choice code\n";
 
 		}
-	}while(choice!=5);
+	}while(choice!=7);
 	return 0;
 }

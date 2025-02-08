@@ -51,7 +51,6 @@ rw 01,ans,02
 
 jmp exit
 
-
 ;Procedure to convert hex to ascii
 htoa:
 	mov al,byte[largest]
