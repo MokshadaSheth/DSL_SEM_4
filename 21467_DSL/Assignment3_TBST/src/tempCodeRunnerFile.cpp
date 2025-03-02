@@ -1,0 +1,2 @@
+Node* lastRight(Node *r);
+	

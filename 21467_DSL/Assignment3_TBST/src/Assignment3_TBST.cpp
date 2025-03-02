@@ -50,6 +50,10 @@ public:
 	void inorder();
 	Node* inorderSuccessor(Node *node);
 	void preorder();
+	void deleteKey(int delkey);
+	Node* lastRight(Node *r);
+	Node* lastLeft(Node *l);
+	// Node* helperFunc(Node *t, Node* parent);
 };
 
 void TBST ::createTree(int d)
@@ -160,13 +164,145 @@ void TBST::preorder()
 			// find the inorder successor last node connected to parent
 		}
 	}
-	//	cout<<"root->data"<<root->data<<"\nroot->lthread "<<root->lthread->data<<"\nroot->lthread->rthread "<<root->lthread->rthread->data;
-	//	cout<<"\nroot->rthread->data "<<root->rthread->data<<"r thread ka succ: "<<root->rthread->rthread->data;
 }
 
+void TBST :: deleteKey(int delKey)
+{
+	cout<<"\nDeleting...\n";
+	if(root == nullptr)
+	{
+		cout<<"\nTree is Empty\n";
+		return;
+	}
+	if(root->data == delKey) //Deletion of root
+	{
+		if(!(root->isLchild || root->isRchild)) //last node
+		{
+			root = nullptr;
+			head->lthread = root;
+			head->isLchild = false;
+		}
+		// else{
+		// 	// root = helperFunc(root,head); //check this
+		// 	return;
+		// }
+	}
+	Node *parent = root;
+
+	while(parent!=head)
+	{
+		if(parent->data > delKey)
+		{
+			if(parent->isLchild == true && parent->lthread->data == delKey)
+			{
+				// parent->lthread = helperFunc(parent->lthread,parent);
+				// return;
+				Node *t = parent->lthread;
+				if(t->isLchild==false && t->isRchild==false) //Leaf Node
+				{
+					parent->lthread = t->lthread;
+					parent->isLchild = false;
+					delete t;
+					return;
+				}
+				else if(t->isLchild == true && t->isRchild == false)
+				{
+					cout<<"\nInside left child is present";
+					parent->lthread = t->lthread;
+					Node *lastRightNode = lastRight(parent->lthread);
+					lastRightNode->rthread = t->rthread; //head
+					return;
+				}
+				else if(t->isRchild == true && t->isLchild == false)
+				{
+					cout<<"\nInside right child is present";
+					parent->lthread = t->rthread;
+					Node *lastLeftNode = lastLeft(parent->lthread);
+					lastLeftNode->lthread = t->lthread;
+					return;
+				}
+				else{
+					cout<<"\nInside both child present";
+					parent->lthread = t->lthread;
+					Node *rightmost = lastRight(parent->lthread);
+					rightmost->rthread = t->rthread;
+					rightmost->isRchild = true;
+					Node *leftmost = lastLeft(rightmost->rthread);
+					leftmost->lthread = rightmost;
+					return;
+				}
+			}
+			else{
+				parent = parent->lthread;  //If no child then it will point to head
+			}
+		}
+		else
+		{
+			if(parent->isRchild == true && parent->rthread->data == delKey)
+			{
+				Node *t = parent->rthread;
+				if(t->isLchild==false && t->isRchild==false) //Leaf Node
+				{
+					parent->rthread = t->rthread;
+					parent->isRchild = false;
+					delete t;
+					return;
+				}
+				else if(t->isLchild == true && t->isRchild == false)
+				{
+					cout<<"\nInside left child is present";
+					parent->rthread = t->lthread;
+					Node *lastRightNode = lastRight(parent->rthread);
+					lastRightNode->rthread = t->rthread; //head
+					return;
+				}
+				else if(t->isRchild == true && t->isLchild == false)
+				{
+					cout<<"\nInside right child is present";
+					parent->rthread = t->rthread;
+					Node *lastLeftNode = lastLeft(parent->rthread);
+					lastLeftNode->lthread = t->lthread;
+					return;
+				}
+				else{
+					cout<<"\nInside both child present";
+					parent->rthread = t->lthread;
+					Node *rightmost = lastRight(parent->rthread);
+					rightmost->rthread = t->rthread;
+					rightmost->isRchild = true;
+					Node *leftmost = lastLeft(rightmost->rthread);
+					leftmost->lthread = rightmost;
+					return;
+				}
+			}
+			else{
+				parent = parent->rthread;
+			}
+		}
+	}
+	cout<<"\nKey does not exists";
+}
+
+Node* TBST :: lastRight(Node *r)
+{
+	if(r->isRchild == false)
+	{
+		return r;
+	}
+	return lastRight(r->rthread);
+}
+Node* TBST :: lastLeft(Node *l)
+{
+	if(l->isLchild == false)
+	{
+		return l;
+	}
+	return lastLeft(l->lthread);
+}
 int main()
 {
 	int choice;
+	int delKey;
 	TBST obj;
 	do
 	{
@@ -187,6 +323,11 @@ int main()
 			break;
 		case 3:
 			obj.preorder();
+			break;
+		case 4:
+			cout<<"\nEnter key to delete: ";
+			cin>>delKey;
+			obj.deleteKey(delKey);
 			break;
 		case 5:
 			cout << "\n\nbyee";
