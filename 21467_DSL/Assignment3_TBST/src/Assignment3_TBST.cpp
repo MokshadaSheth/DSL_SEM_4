@@ -1,11 +1,11 @@
 //============================================================================
 // Name        : Assignment3_TBST.cpp
-// Author      : 
+// Author      :
 // Version     :
 // Copyright   : Your copyright notice
 // Description : Create an inordered threaded binary search tree. Perform inorder, preorder
 // traversals without recursion and deletion of a node. Analyze time
-//and space complexity of the algorithm
+// and space complexity of the algorithm
 //============================================================================
 
 #include <iostream>
@@ -13,7 +13,7 @@ using namespace std;
 
 class Node
 {
-	Node* lthread;
+	Node *lthread;
 	bool isLchild;
 	int data;
 	bool isRchild;
@@ -42,22 +42,23 @@ public:
 class TBST
 {
 	Node *head = new Node();
+
 public:
-	Node *root;
+	Node *root = nullptr;
 	void createTree(int d);
 	void insertNode(Node *newnode, Node *currentParent);
 	void inorder(Node *node);
 	void preorder();
 };
 
-void TBST :: createTree(int d)
+void TBST ::createTree(int d)
 {
 	Node *newNode = new Node(d);
-	if(head->lthread == nullptr) //Tree is empty
+	if (head->lthread == nullptr) // Tree is empty
 	{
 		root = newNode;
 		head->lthread = root;
-		head->rthread = head; //Point to self
+		head->rthread = head; // Point to self
 		root->lthread = head;
 		root->rthread = head;
 		head->isLchild = true;
@@ -68,11 +69,11 @@ void TBST :: createTree(int d)
 	}
 }
 
-void TBST :: insertNode(Node *newNode, Node *currentParent)
+void TBST ::insertNode(Node *newNode, Node *currentParent)
 {
-	if(currentParent->data > newNode->data)
+	if (currentParent->data > newNode->data)
 	{
-		if(currentParent->isLchild == false)
+		if (currentParent->isLchild == false)
 		{
 			newNode->lthread = currentParent->lthread;
 			newNode->rthread = currentParent;
@@ -80,14 +81,15 @@ void TBST :: insertNode(Node *newNode, Node *currentParent)
 			currentParent->isLchild = true;
 			return;
 		}
-		else{
+		else
+		{
 			currentParent = currentParent->lthread;
-			insertNode(newNode,currentParent);
+			insertNode(newNode, currentParent);
 		}
 	}
 	else
 	{
-		if(currentParent->isRchild == false)
+		if (currentParent->isRchild == false)
 		{
 			newNode->rthread = currentParent->rthread;
 			newNode->lthread = currentParent;
@@ -98,87 +100,89 @@ void TBST :: insertNode(Node *newNode, Node *currentParent)
 		else
 		{
 			currentParent = currentParent->rthread;
-			insertNode(newNode,currentParent);
+			insertNode(newNode, currentParent);
 		}
 	}
 }
 
-void TBST :: inorder(Node *node){
-	if(node)
+void TBST ::inorder(Node *node)
+{
+	if (node)
 	{
-		if(node->isLchild==true) inorder(node->lthread);
-		cout<<"  "<<node->data;
-		if(node->isRchild==true) inorder(node->rthread);
+		if (node->isLchild == true)
+			inorder(node->lthread);
+		cout << "  " << node->data;
+		if (node->isRchild == true)
+			inorder(node->rthread);
 	}
-	//	cout<<"Inside pre-order";
-	//	if(node)
-	//	{
-	//		cout<<"  "<<node->data;
-	//		if(node->isLchild == true) inorder(node->lthread);
-	//		if(node->isRchild==true) inorder(node->rthread);
-	//
-	//	}
-
 }
 void TBST::preorder()
 {
+	if(root == nullptr) return;
 	Node *temp = root;
-		// since circular last node connected back to head
-		while(temp!=head){
-			cout<<temp->data<<endl;
-			if(temp->isLchild){
-				temp = temp->lthread;
+	// since circular last node connected back to head
+	while (temp != head)
+	{
+		// cout<<"\nTemp: "<<temp<<"\nhead: "<<head<<"\nRoot: "<<root;
+		cout <<temp->data << "  ";
+		if (temp->isLchild)
+		{
+			temp = temp->lthread;
+		}
+		else
+		{
+			if (temp->isRchild)
+			{
+				temp = temp->rthread;
 			}
-			else{
-				if(temp->isRchild){
+			else
+			{
+				if(temp->rthread == head) return;  //Note this breaks the loop
+				while (temp->isRchild != true)
+				{
 					temp = temp->rthread;
 				}
-				else{
-					while(temp->isRchild != true){
-									temp = temp->rthread;
-								}
-								temp = temp->rthread;
-				}
-				// find the inorder successor last node connected to parent
-
+				temp = temp->rthread;
 			}
-
+			// find the inorder successor last node connected to parent
 		}
-//	cout<<"root->data"<<root->data<<"\nroot->lthread "<<root->lthread->data<<"\nroot->lthread->rthread "<<root->lthread->rthread->data;
-//	cout<<"\nroot->rthread->data "<<root->rthread->data<<"r thread ka succ: "<<root->rthread->rthread->data;
+	}
+	//	cout<<"root->data"<<root->data<<"\nroot->lthread "<<root->lthread->data<<"\nroot->lthread->rthread "<<root->lthread->rthread->data;
+	//	cout<<"\nroot->rthread->data "<<root->rthread->data<<"r thread ka succ: "<<root->rthread->rthread->data;
 }
 
-int main() {
+int main()
+{
 	int choice;
 	TBST obj;
-	do{
-		cout<<"\n1.Insert Data\n2.Inorder Display\n3.Preorder Display\n4.Delete Node\n5.Exit";
-		cout<<"\nEnter choice code: ";
-		cin>>choice;
+	do
+	{
+		cout << "\n1.Insert Data\n2.Inorder Display\n3.Preorder Display\n4.Delete Node\n5.Exit";
+		cout << "\nEnter choice code: ";
+		cin >> choice;
 
-		switch(choice)
+		switch (choice)
 		{
 		case 1:
-			cout<<"\nEnter data: ";
+			cout << "\nEnter data: ";
 			int d;
-			cin>>d;
+			cin >> d;
 			obj.createTree(d);
 			break;
 		case 2:
 			obj.inorder(obj.root);
 			break;
 		case 3:
-			cout<<"\nAbout to call pre order";
 			obj.preorder();
 			break;
 		case 5:
-			cout<<"\n\nbyee";
+			cout << "\n\nbyee";
 			break;
 
 		default:
-			cout<<"\nInvalid choice code";
+			cout << "\nInvalid choice code";
 		}
-	}while(choice!=5);
+	} while (choice != 5);
 
 	return 0;
 }
