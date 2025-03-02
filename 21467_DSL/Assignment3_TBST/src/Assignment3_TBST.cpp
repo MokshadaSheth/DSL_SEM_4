@@ -42,12 +42,13 @@ public:
 class TBST
 {
 	Node *head = new Node();
-
-public:
 	Node *root = nullptr;
+public:
+	
 	void createTree(int d);
 	void insertNode(Node *newnode, Node *currentParent);
-	void inorder(Node *node);
+	void inorder();
+	Node* inorderSuccessor(Node *node);
 	void preorder();
 };
 
@@ -62,6 +63,7 @@ void TBST ::createTree(int d)
 		root->lthread = head;
 		root->rthread = head;
 		head->isLchild = true;
+		head->isRchild = true; //For Inorder Algo
 	}
 	else
 	{
@@ -105,16 +107,27 @@ void TBST ::insertNode(Node *newNode, Node *currentParent)
 	}
 }
 
-void TBST ::inorder(Node *node)
+void TBST ::inorder()
 {
-	if (node)
+	Node *t = head;
+	while(true)
 	{
-		if (node->isLchild == true)
-			inorder(node->lthread);
-		cout << "  " << node->data;
-		if (node->isRchild == true)
-			inorder(node->rthread);
+		t = inorderSuccessor(t); 
+		if(t==head) return;
+		cout<<" "<<t->data;
 	}
+}
+Node* TBST :: inorderSuccessor(Node *x)
+{
+	Node *s = x->rthread;
+	if(x->isRchild)  //If  s is thread then return
+	{
+		while(s->isLchild)
+		{
+			s = s->lthread;
+		}
+	}
+	return s;
 }
 void TBST::preorder()
 {
@@ -170,7 +183,7 @@ int main()
 			obj.createTree(d);
 			break;
 		case 2:
-			obj.inorder(obj.root);
+			obj.inorder();
 			break;
 		case 3:
 			obj.preorder();
