@@ -44,7 +44,7 @@ public:
 
 class BST
 {
-	Node *root;
+	Node *root=nullptr;  //Changed    //IMP
 	Node *temp;
 public:
 
@@ -54,9 +54,12 @@ public:
 	void desendingDisplay();
 	void recursiveAscending(Node *node);
 	void recursiveDescending(Node *node);
-	void deleteKey(Node *);
+	Node* helperFunc(Node *t);
+	void deleteKey(string);
+	Node* findLastRight(Node *r);
 	void updateKey();
-	void numOfComp();
+	void maxComparisons();
+	int findHeight(Node*);
 };
 
 void BST :: createTree()
@@ -69,6 +72,7 @@ void BST :: createTree()
 	Node *newNode = new Node(k,v);
 	if(root == nullptr)
 	{
+		root = new Node();
 		root = newNode;
 	}
 	else
@@ -81,10 +85,7 @@ void BST :: insertNode(Node *newNode, Node *r)
 {
 	temp = r;
 
-	cout<<"\nTemp val: "<<temp->value<<endl;
-
 	int compVal = temp->key.compare(newNode->key);
-	cout<<"Comparison: "<<compVal<<endl;
 
 	if(compVal == 0)
 	{
@@ -122,15 +123,16 @@ void BST :: insertNode(Node *newNode, Node *r)
 
 void BST :: ascendingDisplay()
 {
-	recursiveAscending(root);
+	if(root == nullptr) cout<<"Tree is empty";
+	else recursiveAscending(root);
 }
 void BST :: recursiveAscending(Node *node)
 {
 	if(node)
 	{
-		recursiveAscending(node->left);
+		if(node->left!=nullptr) recursiveAscending(node->left);
 		cout<<"  "<<node->key<<"-->"<<node->value<<"\n";
-		recursiveAscending(node->right);
+		if(node->right!=nullptr) recursiveAscending(node->right);
 	}
 }
 
@@ -138,15 +140,31 @@ void BST :: recursiveDescending(Node *node)
 {
 	if(node)
 	{
-		recursiveDescending(node->right);
+		if(node->right!=nullptr) recursiveDescending(node->right);
 		cout<<"  "<<node->key<<"-->"<<node->value<<"\n";
-		recursiveDescending(node->left);
+		if(node->left!=nullptr) recursiveDescending(node->left);
 	}
 }
 void BST :: desendingDisplay()
 {
-	recursiveDescending(root);
+	if(root == nullptr) cout<<"Tree is empty";
+	else recursiveDescending(root);
 }
+
+void BST::maxComparisons()
+{
+    cout<<"\nMaximum Comparision needed(Height): "<< findHeight(root);
+}
+
+int BST::findHeight(Node* node)
+{
+    if (node == nullptr)
+        return 0; // Base case: empty subtree has height 0
+    int leftHeight = findHeight(node->left);
+    int rightHeight = findHeight(node->right);
+    return max(leftHeight, rightHeight) + 1; // Add 1 for the current level
+}
+
 
 void BST :: updateKey()
 {
@@ -180,30 +198,85 @@ void BST :: updateKey()
 	cout<<"\nKey does not exist to update!!";
 }
 
-void BST :: deleteKey(Node *toDelete)
+void BST :: deleteKey(string delKey)
 {
-	if(root == nullptr)
+	cout<<"\nInside del func";
+	Node *dummy = root;
+	Node *delNode = nullptr;
+	if(dummy == nullptr) 
 	{
-		cout<<"\nTree is empty no deletion possible";
+		cout<<"\nTree is empty";
+		return;
 	}
-	else
+	if(dummy->key == delKey) //To delete Root
 	{
-		if(toDelete->left == nullptr && toDelete->right == nullptr) //leaf
-		{
-			delete toDelete;
-		}
-		else
-		{
-			if( )
-		}
+		delNode = dummy;
+		dummy = helperFunc(dummy);
+		root = dummy;
+		delete delNode;
+		return;
+	}
 
+	while(dummy!=nullptr)
+	{
+		cout<<"\ninside while";
+		if(dummy->key.compare(delKey)>0) //Left side
+		{
+			if(dummy->left!=nullptr && (dummy->left->key == delKey))
+			{
+				dummy->left = helperFunc(dummy->left);
+				return;
+			}else{
+				dummy = dummy->left;
+			}
+		}
+		else{
+			if(dummy->right!=nullptr && (dummy->right->key == delKey))
+			{
+				dummy->right = helperFunc(dummy->right);
+				return;
+			}else
+			{
+				dummy = dummy->right;
+			}
+		}
 	}
+
+}
+
+Node* BST :: helperFunc(Node *t)
+{
+	cout<<"\n Helper";
+	if(t->left == nullptr) //Check which child is present
+	{
+		cout<<"Returning: "<<t->right;
+		return t->right;
+	}
+	if(t->right == nullptr)
+	{
+		return t->left;
+	}
+	Node *rightChild = t->right;
+	Node *lastRight = findLastRight(t->left);
+	lastRight->right = rightChild;
+	cout<<"\nDeletion Succesfull";
+	return t;
+}
+
+Node* BST::findLastRight(Node *r)
+{
+	if(r->right == nullptr)
+	{
+		return r;
+	}
+	return findLastRight(r->right);
 }
 
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	BST obj;
 	int choice;
+	
+	string delKey;
 	do
 	{
 		cout<<"\n1.Insert Data\n2.Ascending Display\n3.Descending Display\n4.No. of Max Cmp\n5.Delete Key\n6.Update Key\n7.Exit\n";
@@ -221,6 +294,14 @@ int main() {
 			break;
 		case 3:
 			obj.desendingDisplay();
+			break;
+		case 4:
+			obj.maxComparisons();
+			break;
+		case 5:
+			cout<<"\nEnter key to delete: ";
+			cin>>delKey;
+			obj.deleteKey(delKey);
 			break;
 		case 6:
 			obj.updateKey();
