@@ -179,13 +179,39 @@ void TBST :: deleteKey(int delKey)
 		if(!(root->isLchild || root->isRchild)) //last node
 		{
 			root = nullptr;
-			head->lthread = root;
+			head->lthread = head;
 			head->isLchild = false;
 		}
-		// else{
-		// 	// root = helperFunc(root,head); //check this
-		// 	return;
-		// }
+		else{
+			if(root->isLchild == true && root->isRchild == false)
+			{
+				cout<<"\nRoot has left";
+				Node *rightMost = lastRight(root->lthread);
+				rightMost->rthread = root->rthread;
+				root = root->lthread;
+				head->lthread = root;
+			}
+			else if(root->isRchild == true && root->isLchild == false)
+			{
+				cout<<"\nRoot has right";
+				Node *leftMost = lastLeft(root->rthread);
+				leftMost->lthread = root->lthread;
+				root = root->rthread;
+				head->lthread = root;
+			}
+			else //Both child are present
+			{
+				Node *rightMost = lastRight(root->lthread);
+				rightMost->rthread = root->rthread;
+				Node *leftMost = lastLeft(rightMost->rthread);
+				leftMost->lthread = rightMost;
+				rightMost->isRchild = true;
+				root = root->lthread;
+				head->lthread = root;
+			}
+			
+		}
+		return;
 	}
 	Node *parent = root;
 
