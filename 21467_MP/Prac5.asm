@@ -63,6 +63,7 @@ mov byte[value],bl
 rw 01,m2,l2
 call htoa
 check:			
+jmp exit
 
 htoa:
 	mov al,byte[value]
