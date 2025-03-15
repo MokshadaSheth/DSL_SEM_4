@@ -339,7 +339,7 @@ void BinaryTree :: postorder()
 				cout<<"\nInside temp->right";
 				obj.push(temp->right);
 			}
-			cout<<"\nIn first while\n obj.top: "<<obj.top<<"  obj2.top: "<<obj2.top;
+			cout<<"\nIn first while\n obj.top: "<<obj.top<<"  obj2.top: "<<obj2.top<<endl;
 			
 		}
 		while(obj2.top != -1)
