@@ -168,150 +168,6 @@ void TBST::preorder()
 		}
 	}
 }
-
-// void TBST :: deleteKey(int delKey)
-// {
-// 	cout<<"\nDeleting...\n";
-// 	if(root == nullptr)
-// 	{
-// 		cout<<"\nTree is Empty\n";
-// 		return;
-// 	}
-// 	if(root->data == delKey) //Deletion of root
-// 	{
-// 		if(!(root->isLchild || root->isRchild)) //last node
-// 		{
-// 			root = nullptr;
-// 			head->lthread = head;
-// 			head->isLchild = false;
-// 		}
-// 		else{
-// 			if(root->isLchild == true && root->isRchild == false)
-// 			{
-// 				cout<<"\nRoot has left";
-// 				Node *rightMost = lastRight(root->lthread);
-// 				rightMost->rthread = root->rthread;
-// 				root = root->lthread;
-// 				head->lthread = root;
-// 			}
-// 			else if(root->isRchild == true && root->isLchild == false)
-// 			{
-// 				cout<<"\nRoot has right";
-// 				Node *leftMost = lastLeft(root->rthread);
-// 				leftMost->lthread = root->lthread;
-// 				root = root->rthread;
-// 				head->lthread = root;
-// 			}
-// 			else //Both child are present
-// 			{
-// 				Node *rightMost = lastRight(root->lthread);
-// 				rightMost->rthread = root->rthread;
-// 				Node *leftMost = lastLeft(rightMost->rthread);
-// 				leftMost->lthread = rightMost;
-// 				rightMost->isRchild = true;
-// 				root = root->lthread;
-// 				head->lthread = root;
-// 			}
-
-// 		}
-// 		return;
-// 	}
-// 	Node *parent = root;
-
-// 	while(parent!=head)
-// 	{
-// 		if(parent->data > delKey)
-// 		{
-// 			if(parent->isLchild == true && parent->lthread->data == delKey)
-// 			{
-// 				// parent->lthread = helperFunc(parent->lthread,parent);
-// 				// return;
-// 				Node *t = parent->lthread;
-// 				if(t->isLchild==false && t->isRchild==false) //Leaf Node
-// 				{
-// 					parent->lthread = t->lthread;
-// 					parent->isLchild = false;
-// 					delete t;
-// 					return;
-// 				}
-// 				else if(t->isLchild == true && t->isRchild == false)
-// 				{
-// 					cout<<"\nInside left child is present";
-// 					parent->lthread = t->lthread;
-// 					Node *lastRightNode = lastRight(parent->lthread);
-// 					lastRightNode->rthread = t->rthread; //head
-// 					return;
-// 				}
-// 				else if(t->isRchild == true && t->isLchild == false)
-// 				{
-// 					cout<<"\nInside right child is present";
-// 					parent->lthread = t->rthread;
-// 					Node *lastLeftNode = lastLeft(parent->lthread);
-// 					lastLeftNode->lthread = t->lthread;
-// 					return;
-// 				}
-// 				else{
-// 					cout<<"\nInside both child present";
-// 					parent->lthread = t->lthread;
-// 					Node *rightmost = lastRight(parent->lthread);
-// 					rightmost->rthread = t->rthread;
-// 					rightmost->isRchild = true;
-// 					Node *leftmost = lastLeft(rightmost->rthread);
-// 					leftmost->lthread = rightmost;
-// 					return;
-// 				}
-// 			}
-// 			else{
-// 				parent = parent->lthread;  //If no child then it will point to head
-// 			}
-// 		}
-// 		else
-// 		{
-// 			if(parent->isRchild == true && parent->rthread->data == delKey)
-// 			{
-// 				Node *t = parent->rthread;
-// 				if(t->isLchild==false && t->isRchild==false) //Leaf Node
-// 				{
-// 					parent->rthread = t->rthread;
-// 					parent->isRchild = false;
-// 					delete t;
-// 					return;
-// 				}
-// 				else if(t->isLchild == true && t->isRchild == false)
-// 				{
-// 					cout<<"\nInside left child is present";
-// 					parent->rthread = t->lthread;
-// 					Node *lastRightNode = lastRight(parent->rthread);
-// 					lastRightNode->rthread = t->rthread; //head
-// 					return;
-// 				}
-// 				else if(t->isRchild == true && t->isLchild == false)
-// 				{
-// 					cout<<"\nInside right child is present";
-// 					parent->rthread = t->rthread;
-// 					Node *lastLeftNode = lastLeft(parent->rthread);
-// 					lastLeftNode->lthread = t->lthread;
-// 					return;
-// 				}
-// 				else{
-// 					cout<<"\nInside both child present";
-// 					parent->rthread = t->lthread;
-// 					Node *rightmost = lastRight(parent->rthread);
-// 					rightmost->rthread = t->rthread;
-// 					rightmost->isRchild = true;
-// 					Node *leftmost = lastLeft(rightmost->rthread);
-// 					leftmost->lthread = rightmost;
-// 					return;
-// 				}
-// 			}
-// 			else{
-// 				parent = parent->rthread;
-// 			}
-// 		}
-// 	}
-// 	cout<<"\nKey does not exists";
-// }
-
 void TBST :: helperDel(int delKey)
 {
 	root = deleteKey(root,delKey);
@@ -492,3 +348,147 @@ int main()
 
 	return 0;
 }
+
+// void TBST :: deleteKey(int delKey)
+// {
+// 	cout<<"\nDeleting...\n";
+// 	if(root == nullptr)
+// 	{
+// 		cout<<"\nTree is Empty\n";
+// 		return;
+// 	}
+// 	if(root->data == delKey) //Deletion of root
+// 	{
+// 		if(!(root->isLchild || root->isRchild)) //last node
+// 		{
+// 			root = nullptr;
+// 			head->lthread = head;
+// 			head->isLchild = false;
+// 		}
+// 		else{
+// 			if(root->isLchild == true && root->isRchild == false)
+// 			{
+// 				cout<<"\nRoot has left";
+// 				Node *rightMost = lastRight(root->lthread);
+// 				rightMost->rthread = root->rthread;
+// 				root = root->lthread;
+// 				head->lthread = root;
+// 			}
+// 			else if(root->isRchild == true && root->isLchild == false)
+// 			{
+// 				cout<<"\nRoot has right";
+// 				Node *leftMost = lastLeft(root->rthread);
+// 				leftMost->lthread = root->lthread;
+// 				root = root->rthread;
+// 				head->lthread = root;
+// 			}
+// 			else //Both child are present
+// 			{
+// 				Node *rightMost = lastRight(root->lthread);
+// 				rightMost->rthread = root->rthread;
+// 				Node *leftMost = lastLeft(rightMost->rthread);
+// 				leftMost->lthread = rightMost;
+// 				rightMost->isRchild = true;
+// 				root = root->lthread;
+// 				head->lthread = root;
+// 			}
+
+// 		}
+// 		return;
+// 	}
+// 	Node *parent = root;
+
+// 	while(parent!=head)
+// 	{
+// 		if(parent->data > delKey)
+// 		{
+// 			if(parent->isLchild == true && parent->lthread->data == delKey)
+// 			{
+// 				// parent->lthread = helperFunc(parent->lthread,parent);
+// 				// return;
+// 				Node *t = parent->lthread;
+// 				if(t->isLchild==false && t->isRchild==false) //Leaf Node
+// 				{
+// 					parent->lthread = t->lthread;
+// 					parent->isLchild = false;
+// 					delete t;
+// 					return;
+// 				}
+// 				else if(t->isLchild == true && t->isRchild == false)
+// 				{
+// 					cout<<"\nInside left child is present";
+// 					parent->lthread = t->lthread;
+// 					Node *lastRightNode = lastRight(parent->lthread);
+// 					lastRightNode->rthread = t->rthread; //head
+// 					return;
+// 				}
+// 				else if(t->isRchild == true && t->isLchild == false)
+// 				{
+// 					cout<<"\nInside right child is present";
+// 					parent->lthread = t->rthread;
+// 					Node *lastLeftNode = lastLeft(parent->lthread);
+// 					lastLeftNode->lthread = t->lthread;
+// 					return;
+// 				}
+// 				else{
+// 					cout<<"\nInside both child present";
+// 					parent->lthread = t->lthread;
+// 					Node *rightmost = lastRight(parent->lthread);
+// 					rightmost->rthread = t->rthread;
+// 					rightmost->isRchild = true;
+// 					Node *leftmost = lastLeft(rightmost->rthread);
+// 					leftmost->lthread = rightmost;
+// 					return;
+// 				}
+// 			}
+// 			else{
+// 				parent = parent->lthread;  //If no child then it will point to head
+// 			}
+// 		}
+// 		else
+// 		{
+// 			if(parent->isRchild == true && parent->rthread->data == delKey)
+// 			{
+// 				Node *t = parent->rthread;
+// 				if(t->isLchild==false && t->isRchild==false) //Leaf Node
+// 				{
+// 					parent->rthread = t->rthread;
+// 					parent->isRchild = false;
+// 					delete t;
+// 					return;
+// 				}
+// 				else if(t->isLchild == true && t->isRchild == false)
+// 				{
+// 					cout<<"\nInside left child is present";
+// 					parent->rthread = t->lthread;
+// 					Node *lastRightNode = lastRight(parent->rthread);
+// 					lastRightNode->rthread = t->rthread; //head
+// 					return;
+// 				}
+// 				else if(t->isRchild == true && t->isLchild == false)
+// 				{
+// 					cout<<"\nInside right child is present";
+// 					parent->rthread = t->rthread;
+// 					Node *lastLeftNode = lastLeft(parent->rthread);
+// 					lastLeftNode->lthread = t->lthread;
+// 					return;
+// 				}
+// 				else{
+// 					cout<<"\nInside both child present";
+// 					parent->rthread = t->lthread;
+// 					Node *rightmost = lastRight(parent->rthread);
+// 					rightmost->rthread = t->rthread;
+// 					rightmost->isRchild = true;
+// 					Node *leftmost = lastLeft(rightmost->rthread);
+// 					leftmost->lthread = rightmost;
+// 					return;
+// 				}
+// 			}
+// 			else{
+// 				parent = parent->rthread;
+// 			}
+// 		}
+// 	}
+// 	cout<<"\nKey does not exists";
+// }
+

@@ -137,7 +137,7 @@ int main() {
 	Graph *obj = nullptr;
 	do
 	{
-		cout<<"\n1.Set Vertices\n2.Create Graph\n3.BFS\n4.DFS\n5.Exit";
+		cout<<"\n1.Set Vertices\n2.Create Graph\n3.BFS\n4.DFS\n5.Exit\n\nEnter Choice Code: ";
 		cin>>choice;
 
 		switch (choice)
