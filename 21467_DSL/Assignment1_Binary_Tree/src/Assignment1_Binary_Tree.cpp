@@ -254,6 +254,11 @@ void BinaryTree ::swap()
 }
 void BinaryTree ::preorder()
 {
+	if(root == nullptr)
+	{
+		cout<<"\nTree is empty!!";
+		return;
+	}
 	Stack obj;
 	Node *temp = root;
 	while (true)
@@ -282,9 +287,13 @@ void BinaryTree ::preorder()
 
 void BinaryTree ::inorder()
 {
+	if(root == nullptr)
+	{
+		cout<<"\nTree is empty!!";
+		return;
+	}
 	Stack obj;
 	Node *temp = root;
-
 	while (true)
 	{
 		while (temp != nullptr)
@@ -301,7 +310,6 @@ void BinaryTree ::inorder()
 		{
 			temp = obj.pop(); // IMP first pop
 			cout << temp->data << " ";
-
 			temp = temp->right;
 		}
 	}
@@ -325,15 +333,12 @@ void BinaryTree ::postorder()
 
 		if (temp->left != nullptr)
 		{
-			cout << "\nInside temp->left";
 			obj.push(temp->left);
 		}
 		if (temp->right != nullptr)
 		{
-			cout << "\nInside temp->right";
 			obj.push(temp->right);
 		}
-		cout << "\nIn first while\n obj.top: " << obj.top << "  obj2.top: " << obj2.top << endl;
 	}
 	while (obj2.top != -1)
 	{
@@ -389,7 +394,6 @@ void BinaryTree ::createTree(int data)
 				break;
 			default:
 				cout << "\nInvalid choice";
-				createTree(data);
 			}
 		}
 	}
