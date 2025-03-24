@@ -93,7 +93,7 @@ void Graph :: primsAlgo(int start)
 			{
 				if(edges[checker] == i)
 				{
-					cout<<"Checker: "
+					cout<<"Checker: "<<checker<<" ";
 					cout<<"\nPresent in edges graph..Going to next vertex";
 					flag = true;
 					break;
