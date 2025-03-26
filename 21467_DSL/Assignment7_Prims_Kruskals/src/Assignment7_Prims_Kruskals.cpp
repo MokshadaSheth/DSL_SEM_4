@@ -74,56 +74,67 @@ void Graph :: primsAlgo(int start)
 	{
 		edges[temp] = -1;
 	}
-	int current;
+	int current = start;
 	int sum = 0;
+	int checker=0;
 
 	while(edges[totalVertices - 1] == -1)
 	{
-		for(int i=0;i<totalVertices;i++)
+		cout<<"\nEdges in while loop: ";
+		for(int i=0;i<totalVertices;i++)//Debug
 			{
 				cout<<edges[i]<<"-->";
 			}
-		current = start;
+
+		int min = INT_MAX;
+		int vertex_min;
 		for(int i=0;i<totalVertices;i++)
 		{
-			int checker = 0;
-			int min = INT_MAX;
-			bool flag=false;
-			while(edges[checker] != -1)
+			while(edges[checker] != -1  && edges[checker] != i) //Already in edges
 			{
-				if(edges[checker] == i)
-				{
-					cout<<"Checker: "<<checker<<" ";
-					cout<<"\nPresent in edges graph..Going to next vertex";
-					flag = true;
-					break;
-				}
-				checker++;
+					checker++;
 			}
-			if(flag) //This vertex is present in edges
+			if(edges[checker] == i)
 			{
 				continue;
 			}
 
-			if(adjecencyMatrix[current][i] < min)
-			{
-				min = adjecencyMatrix[current][i];
-				start = i;
+			if(adjecencyMatrix[current][i] < min)  //here you are checking only one edge but you have to check with all vertices present in edge
+			{ //You have to check if it is already in edges
+				checker = 0;
+				while(edges[checker] != -1  && edges[checker] != i) //Already in edges
+				{
+									checker++;
+				}
+				if(edges[checker] == i)
+				{
+					cout<<"\nWeight is min but already in edges";
+				}
+				else
+				{
+					min = adjecencyMatrix[current][i]; //storing path weight
+					vertex_min = i;
+				}
 			}
+			//check this later
+			checker = 0;
 		}
-		edges[edgePointer] = start;
+		edges[edgePointer] = vertex_min;
+		current = vertex_min;
+		cout<<"\ncurrent: "<<current<<"  weight: "<<min;
+		sum = sum+min;
 		edgePointer++;
 	}
 	cout<<"\nPrims OP: \n";
 	for(int i=0;i<totalVertices;i++)
 	{
-		cout<<edges[i]<<"-->";
+		cout<<"-->"<<edges[i];
 	}
 }
 
 int main() {
 
-	Graph obj(6);
+	Graph obj(4);
 	obj.createGraph();
 	obj.displayMatrix();
 	obj.primsAlgo(0);
