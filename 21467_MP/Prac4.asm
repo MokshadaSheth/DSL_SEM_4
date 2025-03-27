@@ -67,8 +67,15 @@ section .data
 				
 				case5:
 				cmp byte[choice],35h
-				jne case7
+				jne case6
 				call signMul
+				call htoa
+				jmp ending
+				
+				case6:
+				cmp byte[choice],36h
+				jne case7
+				call signDiv
 				call htoa
 				jmp ending
 				
@@ -121,6 +128,16 @@ divProc:
 		checkDiv:
 		mov qword[result],rax
 ret
+
+;-----Signed div
+signDiv:
+		mov rax,0
+		mov ax,word[m1]
+		mov dl,byte[divisor]
+		idiv dl
+		checkDiv:
+		mov qword[result],rax
+ret	
 
 ;---ASCII to HEX			
 htoa:
