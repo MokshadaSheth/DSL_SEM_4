@@ -183,6 +183,7 @@ void BST :: updateKey()
 		if(cmp == 0) // key found
 		{
 			Node *newNode = new Node(newKey,temp->value);
+			deleteKey(toUpdate);
 			insertNode(newNode,root);
 			return;
 		}

@@ -65,78 +65,75 @@ void Graph::displayMatrix()
 	}
 }
 
-void Graph :: primsAlgo(int start)
-{
-	int edges[totalVertices];
-	edges[0] = start;
-	int edgePointer = 1;
-	for(int temp = 1;temp<totalVertices;temp++)
-	{
-		edges[temp] = -1;
-	}
-	int current = start;
-	int sum = 0;
-	int checker=0;
+void Graph::primsAlgo(int start) {
+    int key[MAX_SIZE];
+    int parent[MAX_SIZE];
+    bool mstSet[MAX_SIZE];
 
-	while(edges[totalVertices - 1] == -1)
-	{
-		cout<<"\nEdges in while loop: ";
-		for(int i=0;i<totalVertices;i++)//Debug
-			{
-				cout<<edges[i]<<"-->";
-			}
+    for (int i = 0; i < totalVertices; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = false;
+        parent[i] = -1;
+    }
 
-		int min = INT_MAX;
-		int vertex_min;
-		for(int i=0;i<totalVertices;i++)
-		{
-			while(edges[checker] != -1  && edges[checker] != i) //Already in edges
-			{
-					checker++;
-			}
-			if(edges[checker] == i)
-			{
-				continue;
-			}
+    key[start] = 0;
 
-			if(adjecencyMatrix[current][i] < min)  //here you are checking only one edge but you have to check with all vertices present in edge
-			{ //You have to check if it is already in edges
-				checker = 0;
-				while(edges[checker] != -1  && edges[checker] != i) //Already in edges
-				{
-									checker++;
-				}
-				if(edges[checker] == i)
-				{
-					cout<<"\nWeight is min but already in edges";
-				}
-				else
-				{
-					min = adjecencyMatrix[current][i]; //storing path weight
-					vertex_min = i;
-				}
-			}
-			//check this later
-			checker = 0;
-		}
-		edges[edgePointer] = vertex_min;
-		current = vertex_min;
-		cout<<"\ncurrent: "<<current<<"  weight: "<<min;
-		sum = sum+min;
-		edgePointer++;
-	}
-	cout<<"\nPrims OP: \n";
-	for(int i=0;i<totalVertices;i++)
-	{
-		cout<<"-->"<<edges[i];
-	}
+    for (int count = 0; count < totalVertices - 1; count++) {
+        int min = INT_MAX, u = -1;
+
+        // Pick the minimum key vertex not yet included in MST
+        for (int v = 0; v < totalVertices; v++) {
+            if (!mstSet[v] && key[v] < min) {
+                min = key[v];
+                u = v;
+            }
+        }
+
+        mstSet[u] = true;
+
+        // Update key and parent for adjacent vertices
+        for (int v = 0; v < totalVertices; v++) {
+            if (adjecencyMatrix[u][v] != INT_MAX && !mstSet[v] && adjecencyMatrix[u][v] < key[v]) {
+                key[v] = adjecencyMatrix[u][v];
+                parent[v] = u;
+            }
+        }
+    }
+
+    // Print MST
+    cout << "\nMinimum Spanning Tree using Prim's Algorithm:\n";
+    cout << "Edge\tWeight\n";
+    int totalWeight = 0;
+    for (int i = 0; i < totalVertices; i++) {
+        if (parent[i] != -1) {
+            cout << parent[i] << " - " << i << "\t" << adjecencyMatrix[i][parent[i]] << "\n";
+            totalWeight += adjecencyMatrix[i][parent[i]];
+        }
+    }
+    cout << "Total Weight of MST: " << totalWeight << endl;
 }
 
 int main() {
+    int vertices;
+    cout << "Enter number of vertices: ";
+    cin >> vertices;
 
-	Graph obj(4);
-	obj.createGraph();
-	obj.displayMatrix();
-	obj.primsAlgo(0);
-	return 0;
+    Graph obj(vertices);
+    obj.createGraph();
+    obj.displayMatrix();
+
+    int choice;
+    cout << "\nChoose MST Algorithm:\n1. Prim's Algorithm\n2. Kruskal's Algorithm\nEnter choice: ";
+    cin >> choice;
+
+    if (choice == 1) {
+        obj.primsAlgo(0); // start from vertex 0
+    } else if (choice == 2) {
+        // obj.kruskalsAlgo();
+    } else {
+        cout << "Invalid choice!\n";
+    }
+
+    return 0;
 }
+
