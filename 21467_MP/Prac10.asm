@@ -1,88 +1,105 @@
-%macro print 2
-    mov rax, 01
-    mov rdi, 01
-    mov rsi, %1
-    mov rdx, %2
-    syscall
-%endmacro
+;Write x86 ALP to find the factorial of a given integer number on a command line by using recursion. Explicit stack manipulation is expected in the code.
 
-%macro exit 0
-    mov rax, 60
-    xor rdi, rdi
-    syscall
+%macro rwcall 3
+	mov rax,%1
+	mov rdi,%1
+	mov rsi,%2
+	mov rdx,%3
+	syscall
 %endmacro
-
-section .bss
-    arg_input     resb 1        ; Store input digit
-    result_ascii  resb 4        ; Store hex output (up to 4 digits)
-    factorial_val resd 1        ; 4 bytes to store result of factorial
 
 section .data
-    newline db 0xA
+	
+	op1 db 0xa, "Factorial of "
+	op1len equ $-op1
+	
+	fa1 db "0000000000000001", 0xa, 0xa
+	fa1len equ $-fa1
+	
+	sep db " : "
+	seplen equ $-sep
+	
+	n db 0xa,0xa
+	nl equ $-n
 
-section .text
+section .bss
+	count resb 1
+	num resb 1
+	fa resb 16
 global _start
-
-_start:
-    ; Step 1: Get command-line argument
-    pop rbx                ; argc
-    pop rbx                ; argv[0]
-    pop rbx                ; argv[1] (pointer to input string)
-
-    mov al, [rbx]          ; first character (digit char like '5')
-    sub al, '0'            ; convert ASCII to number
-    mov [arg_input], al
-
-    ; Step 2: Print the input digit (as ASCII again)
-    add al, '0'            ; back to ASCII
-    mov [arg_input], al
-    print arg_input, 1
-    print newline, 1
-
-    ; Step 3: Calculate factorial
-    sub al, '0'            ; convert to number again
-    movzx ecx, al          ; move into ecx for loop counter
-    call factorial
-    mov [factorial_val], eax  ; store full 4-byte result
-
-    ; Step 4: Convert factorial result to ASCII (hex)
-    mov eax, [factorial_val]
-    mov esi, eax           ; move to esi for hex conversion
-    call hex_to_ascii
-
-    ; Step 5: Print final result
-    print result_ascii, 4
-    print newline, 1
-
-    exit
-
-factorial:
-    mov eax, 1
-.loop:
-    test ecx, ecx
-    jz .done
-    mul ecx
-    dec ecx
-    jmp .loop
-.done:
-    ret
-
-hex_to_ascii:
-    mov ebx, esi           ; get result value in ebx
-    mov rdi, result_ascii
-    mov rcx, 4             ; convert 4 nibbles
-
-.convert_loop:
-    rol ebx, 4             ; rotate left by 4 to get highest nibble first
-    mov dl, bl
-    and dl, 0x0F           ; isolate the nibble
-    cmp dl, 9
-    jbe .add30
-    add dl, 7
-.add30:
-    add dl, '0'
-    mov [rdi], dl
-    inc rdi
-    loop .convert_loop
-    ret
-
+section .text
+_start:	
+		pop rdi
+		pop rdi
+		pop rdi
+		
+		mov bl, byte[rdi]
+		
+		mov [num], rdi
+		rwcall 1,op1,op1len
+		rwcall 1,[num],1
+		rwcall 1,sep,seplen
+	
+		call a2h
+		
+		cmp rbx, 1
+		jbe print1
+		
+		mov rax,rbx
+		call fact
+		
+		mov rbx, fa
+		mov byte[count], 16
+		call h2a
+		rwcall 1,fa,16
+		rwcall 1,n,nl
+		jmp exit
+		
+		
+		print1:
+			rwcall 1,fa1,fa1len
+			jmp exit
+			
+			
+		fact:
+			cmp rbx, 1
+			jbe f1
+			dec rbx
+			mul rbx
+			call fact			
+			f1:
+				ret
+			
+		
+		a2h:
+			cmp bl,39h
+			jbe y
+			sub bl,07h
+			y:
+				sub bl,30h
+			mov al,bl
+			ret
+		
+		
+		h2a:	
+			again:
+				rol rax,04h
+				mov rdx,rax
+				and rdx, 0Fh
+				cmp dl, 09h
+				jle x
+				add  dl, 07h
+				x:
+					add dl, 30h
+				mov [rbx], dl
+				inc rbx
+				dec byte[count]
+				jnz again
+			ret
+			
+			
+		exit:
+			mov rax,60
+			mov rdi,0
+			syscall
+		

@@ -1,138 +1,161 @@
-%macro m 3
- mov rax, %1
- mov rdi, %1
- mov rsi, %2
- mov rdx,%3
- syscall
+
+%macro rw 3
+	mov rax,%1
+	mov rdi,%1
+	mov rsi,%2
+	mov rdx,%3
+	syscall
 %endmacro
- 
-;A is executable file
 
 section .data
- msg1 db "Enter number: "
- l1 equ $-msg1
- menu db 10,13, "Enter 1 for BCD to HEX"
- db 10,13, "Enter 2 for HEX to BCD"
- db 10,13, "Enter 3 to exit = "
- l equ $-menu
-   
- 
+	menu db 0xa, "----------Menu----------", 10, "1. HEX TO BCD", 10, "2. BCD TO HEX", 10, "3. Exit", 10, 10, "Enter choice : "
+	menulen equ $-menu
+	
+	s1 db "Enter 4 digit HEX number : ",10,10," HEX : "  
+	op1len equ $-s1
+	
+	s2 db "Enter 5 digit BCD number : ",10,10," BCD : "
+	op2len equ $-s2
+	
+	s3 db " BCD : "
+	op3len equ $-s3
+	
+	s4 db " HEX : "
+	op4len equ $-s4
+	
+	umsg db "h", 0xa, 10
+	umsglen equ $-umsg
+	
+	nm db 10
+	nml equ $-nm
+	
+	invalid db "Invalid Choice !",10
+	invml equ $-invalid
+	
+	
 section .bss
- input resb 10    
- choice resb 2
- sum resq 1 	 
- sum1 resq 1    
- result1 resb 16  
- multi resq 2  
-	 
- 
+	num resb 5
+	bcd resb 6
+	choice resb 2
+	count resb 1
+	res resb 1
+	ans resb 16
+global _start
 section .text
- global _start
 _start:
-   lp1:
- m 1,menu,l
- m 0,choice,2
- cmp byte[choice],'1'
- je bcdtohex
- cmp byte[choice],'2'
- je hextobcd
- cmp byte[choice],'3'
- je exit
-	 
- bcdtohex:
- m 1, msg1, l1
- m 0, input, 6
- mov qword[multi],10000
- mov qword [sum], 0
- mov rsi, input
- mov rcx, 5 	 
-lp:
- mov rax,0
- mov al, byte [rsi]  
- sub al, '0'     	 
- mov rbx, qword [multi]
- mul rbx         	 
- add qword [sum], rax    
- mov rax, qword [multi]
- mov rbx, 10
- div rbx
- mov qword [multi], rax
- inc rsi
- dec rcx
- jnz lp
- 
- mov rax, qword [sum]
- call pro
- jmp lp1
-	 
- hextobcd:
- m 1, msg1, l1   	 
- m 0, input, 5   	 
-	 
- 
- mov rsi, input
- mov qword [sum1], 0  
- mov rcx, 4     	 
-	 
-hex:
- mov al, byte [rsi]    
- cmp al, '9'
- jbe digit     	 
- sub al, 'A' - 10 	 
- jmp add
-digit:
- sub al, '0'     	 
-add:
- shl qword [sum1], 4  
- add [sum1], al   	 
- inc rsi
- dec rcx
- jnz hex
- 
- 
- mov rax, qword [sum1]    
- mov rbx, 10                 	 
- mov rsi, result1 + 15    
- 
-bcd:
- xor rdx, rdx     	 
- div rbx         	 
- add dl, '0'     	 
- mov [rsi], dl   	 
- dec rsi                         	 
- cmp rax, 0     	 
- jne bcd
- 
- 
- mov rsi,result1         	 
- m 1, rsi, 16   	 
- jmp lp1         	 
-	 
-   exit:
- mov rax, 60
- mov rdi,0
- syscall
- 
-pro:
- mov rdi, result1
- mov rbx, rax
- mov rcx, 16    
-a:
- rol rbx, 4
- mov al, bl
- and al, 0Fh
- cmp al, 09h
- jg b1
- add al, 30h
- jmp b2
- 
-b1:
- add al, 37h
- 
-b2:
- mov byte [rdi], al
- inc rdi
- dec rcx
- jnz a  
- m 1, result1, 16
- ret
+	loop_back:
+	rw 1, menu, menulen
+	rw 0, choice, 2
+	
+	rw 1,nm,nml
+	
+	cmp byte[choice], 31h
+	je h2b_case
+	
+	cmp byte[choice], 32h
+	je b2h_case
+	
+	cmp byte[choice], 33h
+	je exit
+	
+	jmp invalid_choice
+	
+	h2b_case:
+		rw 1,s1,op1len		
+		rw 0,num,5
+		call a2h
+		call hextobcd
+		rw 1,nm,nml
+		jmp loop_back
+		
+	b2h_case:
+		rw 1,s2,op2len		
+		rw 0,bcd,6
+		call BcdtoHex
+		call h2a16
+		rw 1,s4,op4len
+		rw 1,ans,4
+		rw 1,nm,nml
+		jmp loop_back
+		
+	
+	invalid_choice:
+		rw 1,invalid,invml
+		jmp exit
+		
+	
+	hextobcd:
+		mov bx,10
+		mov byte[count],0
+		back:
+			xor dx,dx
+			div bx
+			push dx
+			inc byte[count]
+			cmp ax,0
+			jnz back
+		rw 1,s3,op3len
+		back1:
+			pop dx
+			add dl,30h
+			mov [res],dl
+			rw 1,res,1
+			dec byte[count]
+			jnz back1
+		ret
+		
+	BcdtoHex:
+		mov rsi, bcd
+		xor rax,rax
+		mov byte[count],5
+		mov rbx, 10
+		next:
+			xor cx,cx
+			mul rbx
+			mov cl, [rsi]
+			sub cl, 30h
+			add ax,cx
+			inc rsi
+			dec byte[count]
+			jnz next
+		ret
+	
+	a2h:
+		mov byte[count],4
+		mov rbx, num
+		again:
+			mov dl,[rbx]
+			cmp dl,39h
+			jbe y
+			sub dl,07h
+			y:
+				sub dl,30h
+			shl ax,4
+			or al,dl
+			inc rbx
+			dec byte[count]
+			jnz again
+			ret
+	
+		h2a16:	
+			mov rbx, ans
+			mov byte[count], 4
+			again2:
+				rol ax,04h
+				mov dx,ax
+				and dx, 0Fh
+				cmp dl, 09h
+				jle x
+				add  dl, 07h
+				x:
+					add dl, 30h
+				mov [rbx], dl
+				inc rbx
+				dec byte[count]
+				jnz again2
+			ret
+	
+	exit:
+		mov rax,60
+		mov rdi,0
+		syscall
