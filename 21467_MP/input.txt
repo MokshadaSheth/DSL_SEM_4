@@ -1,0 +1,6 @@
+Hello World
+This is NASM 64-bit
+Blank line here
+
+Counting spaces, lines, chars
+

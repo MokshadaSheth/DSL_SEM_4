@@ -1,0 +1,138 @@
+%macro m 3
+ mov rax, %1
+ mov rdi, %1
+ mov rsi, %2
+ mov rdx,%3
+ syscall
+%endmacro
+ 
+;A is executable file
+
+section .data
+ msg1 db "Enter number: "
+ l1 equ $-msg1
+ menu db 10,13, "Enter 1 for BCD to HEX"
+ db 10,13, "Enter 2 for HEX to BCD"
+ db 10,13, "Enter 3 to exit = "
+ l equ $-menu
+   
+ 
+section .bss
+ input resb 10    
+ choice resb 2
+ sum resq 1 	 
+ sum1 resq 1    
+ result1 resb 16  
+ multi resq 2  
+	 
+ 
+section .text
+ global _start
+_start:
+   lp1:
+ m 1,menu,l
+ m 0,choice,2
+ cmp byte[choice],'1'
+ je bcdtohex
+ cmp byte[choice],'2'
+ je hextobcd
+ cmp byte[choice],'3'
+ je exit
+	 
+ bcdtohex:
+ m 1, msg1, l1
+ m 0, input, 6
+ mov qword[multi],10000
+ mov qword [sum], 0
+ mov rsi, input
+ mov rcx, 5 	 
+lp:
+ mov rax,0
+ mov al, byte [rsi]  
+ sub al, '0'     	 
+ mov rbx, qword [multi]
+ mul rbx         	 
+ add qword [sum], rax    
+ mov rax, qword [multi]
+ mov rbx, 10
+ div rbx
+ mov qword [multi], rax
+ inc rsi
+ dec rcx
+ jnz lp
+ 
+ mov rax, qword [sum]
+ call pro
+ jmp lp1
+	 
+ hextobcd:
+ m 1, msg1, l1   	 
+ m 0, input, 5   	 
+	 
+ 
+ mov rsi, input
+ mov qword [sum1], 0  
+ mov rcx, 4     	 
+	 
+hex:
+ mov al, byte [rsi]    
+ cmp al, '9'
+ jbe digit     	 
+ sub al, 'A' - 10 	 
+ jmp add
+digit:
+ sub al, '0'     	 
+add:
+ shl qword [sum1], 4  
+ add [sum1], al   	 
+ inc rsi
+ dec rcx
+ jnz hex
+ 
+ 
+ mov rax, qword [sum1]    
+ mov rbx, 10                 	 
+ mov rsi, result1 + 15    
+ 
+bcd:
+ xor rdx, rdx     	 
+ div rbx         	 
+ add dl, '0'     	 
+ mov [rsi], dl   	 
+ dec rsi                         	 
+ cmp rax, 0     	 
+ jne bcd
+ 
+ 
+ mov rsi,result1         	 
+ m 1, rsi, 16   	 
+ jmp lp1         	 
+	 
+   exit:
+ mov rax, 60
+ mov rdi,0
+ syscall
+ 
+pro:
+ mov rdi, result1
+ mov rbx, rax
+ mov rcx, 16    
+a:
+ rol rbx, 4
+ mov al, bl
+ and al, 0Fh
+ cmp al, 09h
+ jg b1
+ add al, 30h
+ jmp b2
+ 
+b1:
+ add al, 37h
+ 
+b2:
+ mov byte [rdi], al
+ inc rdi
+ dec rcx
+ jnz a  
+ m 1, result1, 16
+ ret

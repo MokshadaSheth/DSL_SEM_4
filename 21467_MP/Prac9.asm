@@ -1,49 +1,86 @@
-%macro rw 3
-mov rax, %1
-mov rdi,01
-mov rsi,%2
-mov rdx, %3
-syscall
+
+
+%macro scall 4
+    mov rax, %1
+    mov rdi, %2
+    mov rsi, %3
+    mov rdx, %4
+    syscall
 %endmacro
 
+global buffer, cnt, cnt2, cnt3
+global scount, ncount, chacount
+global msg6, len6, new, new_len
+
+
 section .data
-fname db "data.txt",0
+    filename     db "input.txt", 0
+    msg1         db "Enter character to search: ", 0
+    msg1_len     equ $ - msg1
+
+    msg6         db "Character Occurrence: ", 0
+    len6         equ $ - msg6
+
+    new          db 10
+    new_len      equ 1
 
 section .bss
-buffer resb 100
-fd resq 1
-;global buffer
-global _start
+    buffer       resb 1024
+    char_in      resb 1
+
+    cnt          resb 1
+    cnt2         resb 1
+    cnt3         resb 1
+
+    scount       resb 1
+    ncount       resb 1
+    chacount     resb 1
 
 section .text
-;extern
+    global  _start
+    extern spaces, enters, occ
 
 _start:
+    ; Print message to enter char
+    scall 1, 1, msg1, msg1_len
 
-		mov rax,02
-		mov rdi,fname
-		mov rsi, 02h
-		mov rdx, 0777h
-		syscall
-		
-		temp:
-		;read
-		mov rax,00
-		mov rdi,[fd]
-		mov rsi,buffer
-		mov rdx,100
-		syscall
-		check:
-		rw 01,buffer,100
-		
-		;exit flie
-		mov rax , 3
-		mov rdi, [fd]
-		syscall
-		
-		
+    ; Read one byte from user (char_in)
+    scall 0, 0, char_in, 1
 
-exit:
-mov rax,60
-mov rdi,00
-syscall	
+    ; Open the file input.txt
+    mov rax, 2              ; sys_open
+    mov rdi, filename
+    mov rsi, 0              ; O_RDONLY
+    syscall
+    mov r12, rax            ; save file descriptor
+
+    ; Read file into buffer
+    scall 0, r12, buffer, 1024
+    mov r13, rax            ; bytes read
+
+    ; Initialize counters
+    mov byte[cnt], r13b
+    mov byte[cnt2], r13b
+    mov byte[cnt3], r13b
+
+    mov byte[scount], 0
+    mov byte[ncount], 0
+    mov byte[chacount], 0
+
+    ; Call spaces
+    call spaces
+
+    ; Call enters
+    call enters
+
+    ; Move char_in to bl for occ
+    mov bl, byte[char_in]
+
+    ; Call occ
+    call occ
+
+    ; Exit
+    mov rax, 60
+    xor rdi, rdi
+    syscall
+
