@@ -31,6 +31,8 @@ mov al,00h ; Initially it is 0
 
 loop:
 	cmp al,[rdi]
+        ja incPointer         ;------Note:If jg 03 is largest as it considers CF as negative thus use ja
+
 	mov al,[rdi]  ;if al is not large then only
 	
 	incPointer:
@@ -78,4 +80,4 @@ exit:
 mov rax,60
 mov rdi,00
 syscall
-	ja incPointer         ;------Note:If jg 03 is largest as it considers CF as negative thus use ja
+	
