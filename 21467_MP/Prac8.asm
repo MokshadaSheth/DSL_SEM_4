@@ -29,28 +29,10 @@ global _start
 	
 	_start:
 	rw 01,m1,l1
-	mov byte[cnt],05h
+    
 	mov rsi,arr
+	call print_arr
 	
-	repeat:
-	mov qword[var],rsi
-	
-	push rsi
-	call htoa
-	pop rsi
-	
-	mov rax,[rsi]   ;Content in RSI
-	mov qword[var],rax
-	
-	push rsi
-	
-	call htoa
-
-	pop rsi
-	
-	add rsi,08
-	dec byte[cnt]
-	jnz repeat
  
  ;---Main logic
  mov rsi,arr+32
@@ -61,11 +43,19 @@ global _start
  rep movsq
   
  ;--------Destination
- rw 01,m3,l3
- mov byte[cnt],05h
+     rw 01,m3,l3
+ 
 	mov rsi,dst-16 ;;IMP
 	
-	loop:
+	call print_arr
+ 
+jmp exit
+
+
+;Source and destination address and content
+print_arr:
+    mov byte[cnt],05h
+    loop:
 	mov qword[var],rsi
 	
 	push rsi
@@ -83,15 +73,7 @@ global _start
 	add rsi,08
 	dec byte[cnt]
 	jnz loop
- 
- 
- 
- 
-jmp exit
-
-
-
-
+ret
 
 
 
@@ -127,4 +109,3 @@ exit:
 mov rax,60
 mov rdi,00
 syscall	
-
