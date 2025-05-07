@@ -1,139 +1,179 @@
+// Direct Access Data in File
+
 #include <iostream>
 #include <fstream>
 #include <cstring>
-
+#include<set>
 using namespace std;
 
-struct Student {
-    int rollNumber;
+class Student
+{
+    int rollNo;
     char name[50];
-    char address[100];
+    char add[100];
+
+public:
+    Student()
+    {
+        rollNo = -1;
+        name[0] = '\0';
+        add[0] = '\0';
+    }
+    Student(int r, char n[], char a[])
+    {
+        rollNo = r;
+        strcpy(name, n);
+        strcpy(add, a);
+    }
+    friend class DirectFile;
 };
-
-void writeRecords(const string& filename) {
+class DirectFile
+{
     fstream file;
-    file.open(filename, ios::in | ios::out | ios::binary | ios::trunc);
+    set <int> allRecords;
+    int current = 0;
 
-    if (!file) {
-        cout << "Error opening file!" << endl;
-        return;
+public:
+    DirectFile()
+    {
+        file.open("Temp", ios::in | ios::out | ios::binary | ios::trunc);
+        if (!file)
+        {
+            cout << "\nError creating Temp.txt\n";
+        }
+        else
+        {
+            cout << "\nFile Created Successfully";
+        }
     }
-
-    Student student;
-    int numberOfRecords;
-    cout << "Enter number of records to write: ";
-    cin >> numberOfRecords;
-
-    for (int i = 0; i < numberOfRecords; i++) {
-        cout << "Enter Roll Number: ";
-        cin >> student.rollNumber;
-        cin.ignore();  
-        cout << "Enter Name: ";
-        cin.getline(student.name, 50);
-        cout << "Enter Address: ";
-        cin.getline(student.address, 100);
-        file.seekp(student.rollNumber * sizeof(Student), ios::beg);
-        file.write(reinterpret_cast<const char*>(&student), sizeof(Student));
+    DirectFile(string FileName)
+    { // Note: Using trunc or app is imp
+        file.open(FileName, ios::in | ios::out | ios::binary | ios::trunc);
+        if (!file)
+        {
+            cout << "\nError creating " << FileName << endl;
+        }
+        else
+        {
+            cout << "\nFile Created Successfully";
+        }
     }
-
-    file.close();
-    cout << "Records written successfully." << endl;
+    ~DirectFile()
+    {
+        cout << "\nIn Destructor Closing File..";
+        file.close();
+    }
+    Student takeIP();
+    void writeRecord();
+    void readRecord();
+    void displayRecord(Student obj);
+    void deleteRecord();
+    void displayAll();
+};
+Student DirectFile ::takeIP()
+{
+    Student obj;
+    cout << "\nEnter rollNo,name, address: ";
+    cin >> obj.rollNo >> obj.name >> obj.add;
+    allRecords.insert(obj.rollNo);
+    return obj;
 }
-
-void readRecords(const string& filename) {
-    fstream file;
-    file.open(filename, ios::in | ios::binary);
-
-    if (!file) {
-        cout << "Error opening file!" << endl;
-        return;
-    }
-
-    int rollNumber;
-    cout << "Enter Roll Number to read: ";
-    cin >> rollNumber;
-
-    Student student;
-    file.seekg(rollNumber * sizeof(Student), ios::beg);
-    file.read(reinterpret_cast<char*>(&student), sizeof(Student));
-
-    if (student.rollNumber != 0) {
-        cout << "Roll Number: " << student.rollNumber << endl;
-        cout << "Name: " << student.name << endl;
-        cout << "Address: " << student.address << endl;
-    } else {
-        cout << "No record found with Roll Number: " << rollNumber << endl;
-    }
-
-    file.close();
+void DirectFile ::writeRecord()
+{
+    Student data = takeIP();
+    // To write seekp
+    file.seekp(data.rollNo * sizeof(Student), ios::beg); // IMP
+    file.write((char *)(&data), sizeof(Student));
 }
+void DirectFile ::readRecord()
+{
+    cout << "\nEnter roll number to read: ";
+    int r;
+    cin >> r;
 
-void deleteRecord(const string& filename) {
-    fstream file;
-    file.open(filename, ios::in | ios::out | ios::binary);
+    file.seekg(r * sizeof(Student), ios::beg);
+    Student readData;
+    file.read((char *)(&readData), sizeof(Student));
 
-    if (!file) {
-        cout << "Error opening file!" << endl;
-        return;
+    if (readData.rollNo == r)
+    {
+        displayRecord(readData);
     }
-
-    int rollNumber;
-    cout << "Enter Roll Number to delete: ";
-    cin >> rollNumber;
-
-    Student student;
-    file.seekg(rollNumber * sizeof(Student), ios::beg);
-    file.read(reinterpret_cast<char*>(&student), sizeof(Student));
-
-    if (student.rollNumber != 0) {
-        student.rollNumber = 0;
-        file.seekp(rollNumber * sizeof(Student), ios::beg);
-        file.write(reinterpret_cast<const char*>(&student), sizeof(Student));
-        cout << "Record with Roll Number " << rollNumber << " deleted successfully." << endl;
-    } else {
-        cout << "No record found with Roll Number: " << rollNumber << endl;
+    else
+    {
+        cout << "\nRecord Does not exists!\n";
     }
-
-    file.close();
 }
+void DirectFile ::deleteRecord()
+{
+    int r;
+    cout << "\nEnter roll number to be deleted: ";
+    cin >> r;
+    Student deleteData;
+    file.seekg(r * sizeof(Student), ios ::beg);
+    file.read((char *)(&deleteData), sizeof(Student));
 
-void displayMenu() {
-    cout << "\nStudent Records Menu:" << endl;
-    cout << "1. Write Records" << endl;
-    cout << "2. Read Records" << endl;
-    cout << "3. Delete Records" << endl;
-    cout << "4. Exit" << endl;
-    cout << "Enter your choice: ";
+    if (deleteData.rollNo == r)
+    {
+        file.seekp(r * sizeof(Student), ios ::beg);
+        deleteData.rollNo = -1;
+        file.write((char *)(&deleteData), sizeof(Student));
+        allRecords.erase(r);
+        cout << "\nDeletion Successfull...";
+    }
+    else
+    {
+        cout << "\nRecord Does not exist...\n";
+    }
 }
+void DirectFile ::displayRecord(Student obj)
+{
+    cout << "\nName: " << obj.name << "\nRoll no.: " << obj.rollNo << "\nAddress:" << obj.add << endl;
+}
+void DirectFile ::displayAll()
+{
+    Student readData;
+    for (auto it : allRecords)
+    {
+        file.seekg(it * sizeof(Student), ios::beg);
+        file.read((char *)(&readData), sizeof(Student));
 
-int main() {
-    string filename;
-    cout << "Enter the filename for student records: ";
-    cin >> filename;  
-
+        displayRecord(readData);
+    }
+}
+int main()
+{
+    // DirectFile obj;
+    DirectFile obj1("Student"); // Note: Do not use .txt extension
     int choice;
-
-    do {
-        displayMenu();
+    do
+    {
+        cout << "\n1.Write Record\n2.Read Record\n3.Delete Record\n4.Display All Records\n5.Exit";
+        cout << "\nEnter choice code: ";
         cin >> choice;
 
-        switch (choice) {
-            case 1:
-                writeRecords(filename);
-                break;
-            case 2:
-                readRecords(filename);
-                break;
-            case 3:
-                deleteRecord(filename);
-                break;
-            case 4:
-                cout << "Exiting program." << endl;
-                break;
-            default:
-                cout << "Invalid choice" << endl;
+        switch (choice)
+        {
+        case 1:
+            obj1.writeRecord();
+            break;
+        case 2:
+            obj1.readRecord();
+            break;
+        case 3:
+            obj1.deleteRecord();
+            break;
+        case 4:
+            obj1.displayAll();
+            break;
+        case 5:
+            cout << "\nExiting...\n";
+            break;
+        default:
+            cout << "\nInvalid Ip";
+            break;
         }
-    } while (choice != 4);
+    } while (choice != 5);
 
     return 0;
 }

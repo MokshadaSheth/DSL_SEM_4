@@ -1,142 +1,143 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+#include<iostream>
+#include<fstream>
 using namespace std;
 
-class Student {
-public:
-    int rollNumber;
+class Student
+{
+    int rollNo;
     string name;
     string division;
     string address;
+    fstream file;
+    public:
+        Student()
+        {
+            file.open("Temp.txt", ios::in | ios::out | ios::app);
+            if(!file)
+            {
+                cout<<"\nError opening file...";
+            }
+            else{
+                 cout<<"File created successfully..\n";
+            }
+        }
+        Student(string fname)
+        {
+            file.open(fname, ios::in | ios::out | ios::app);
+            if(!file)
+            {
+                cout<<"\nError opening file...";
+            }
+            else{
+                 cout<<"File created successfully..\n";
+            }
+        }
+        ~Student()
+        {
+            cout<<"\nClosing file...";
+            file.close();
+        }
 
-    void getDetails() {
-        cout << "Enter Roll Number: ";
-        cin >> rollNumber;
-        cin.ignore();
-        cout << "Enter Name: ";
-        getline(cin, name);
-        cout << "Enter Division: ";
-        getline(cin, division);
-        cout << "Enter Address: ";
-        getline(cin, address);
-    }
-
-    void display() const {
-        cout << "Roll Number: " << rollNumber << endl;
-        cout << "Name: " << name << endl;
-        cout << "Division: " << division << endl;
-        cout << "Address: " << address << endl;
-    }
+        void writeData();
+        void getData();
+        void readR();
+        void deleteR();
+        void displaySpecific();
 };
 
-void addStudent() {
-    Student student;
-    student.getDetails();
-    ofstream outFile("students.txt", ios::app);
-    if (!outFile) {
-        cout << "Error opening file for writing." << endl;
-        return;
-    }
-    outFile << student.rollNumber << endl;
-    outFile << student.name << endl;
-    outFile << student.division << endl;
-    outFile << student.address << endl;
-    outFile.close();
-    cout << "Student record added successfully." << endl;
+void Student :: getData()
+{
+    cout<<"\nEnter Roll No. Name Division Address: ";
+    cin>>rollNo>>name>>division>>address;
 }
+void Student :: writeData()
+{
+    getData();
+    file<<rollNo<<endl<<name<<endl<<division<<endl<<address<<endl;
+}
+void Student::readR()
+{
+    int r;
+    string n, d, a;
 
-void deleteStudent(int rollNumber) {
-    ifstream inFile("students.txt");
-    ofstream outFile("temp.txt");
-    if (!inFile || !outFile) {
-        cout << "Error opening file." << endl;
-        return;
+    file.clear();         // Clear EOF flag
+    file.seekg(0);        // Go to beginning
+
+    while (file >> r >> n >> d >> a)
+    {
+        cout << "\nName: " << n
+             << "\nRollNo.: " << r
+             << "\nDivision: " << d
+             << "\nAddress: " << a << endl;
     }
-    Student student;
+}
+void Student :: displaySpecific()
+{
+    int r,roll;
+    string n,d,a;
+    cout<<"\nEnter roll number to display data of: ";
+    cin>>r;
+    file.clear();
+    file.seekg(0);
+
+    while(file>>roll>>n>>d>>a)
+    {
+        if(r == roll)
+        {
+            cout << "\nName: " << n
+             << "\nRollNo.: " << r
+             << "\nDivision: " << d
+             << "\nAddress: " << a << endl;
+             return;
+        }
+    }
+    cout<<"\nRecord not found...!\n";
+}
+void Student :: deleteR()
+{
+    ofstream out;
+    out.open("Temp.txt", ios::out | ios::trunc);
+
+    int r,roll;
+    string n,d,a;
     bool found = false;
-    while (inFile >> student.rollNumber) {
-        inFile.ignore();
-        getline(inFile, student.name);
-        getline(inFile, student.division);
-        getline(inFile, student.address);
-        if (student.rollNumber == rollNumber) {
+    cout<<"\nEnter rollnumber to delete: ";
+    cin>>r;
+
+    file.clear();
+    file.seekg(0);
+
+    while(file>>roll>>n>>d>>a)
+    {
+        if(r == roll)
+        {
             found = true;
-            cout << "Deleted record: " << endl;
-            student.display();
-        } else {
-            outFile << student.rollNumber << endl;
-            outFile << student.name << endl;
-            outFile << student.division << endl;
-            outFile << student.address << endl;
+        }
+        else{
+            out<<roll<<endl<<n<<endl<<d<<endl<<a<<endl;
         }
     }
-    inFile.close();
-    outFile.close();
-    remove("students.txt");
-    rename("temp.txt", "students.txt");
-    if (!found) {
-        cout << "No record found with Roll Number: " << rollNumber << endl;
-    } else {
-        cout << "Record deleted successfully." << endl;
+    if(!found)
+    {
+        cout<<"\nRecord not found\n";
+        remove("Temp.txt");
+        
+    }
+    else{
+        cout<<"\nDeletion succesfull";
+        file.close();
+        remove("Data.txt");
+        rename("Temp.txt","Data.txt");
+        file.open("Data.txt", ios::in | ios::out | ios::app);
     }
 }
-
-void displayStudent(int rollNumber) {
-    ifstream inFile("students.txt");
-    if (!inFile) {
-        cout << "Error opening file." << endl;
-        return;
-    }
-    Student student;
-    bool found = false;
-    while (inFile >> student.rollNumber) {
-        inFile.ignore();
-        getline(inFile, student.name);
-        getline(inFile, student.division);
-        getline(inFile, student.address);
-        if (student.rollNumber == rollNumber) {
-            found = true;
-            student.display();
-            break;
-        }
-    }
-    inFile.close();
-    if (!found) {
-        cout << "No record found with Roll Number: " << rollNumber << endl;
-    }
-}
-
-int main() {
-    int choice, rollNumber;
-    while (true) {
-        cout << "\nStudent Information System" << endl;
-        cout << "1. Add Student" << endl;
-        cout << "2. Delete Student" << endl;
-        cout << "3. Display Student" << endl;
-        cout << "4. Exit" << endl;
-        cout << "Enter your choice: ";
-        cin >> choice;
-        switch (choice) {
-        case 1:
-            addStudent();
-            break;
-        case 2:
-            cout << "Enter Roll Number to delete: ";
-            cin >> rollNumber;
-            deleteStudent(rollNumber);
-            break;
-        case 3:
-            cout << "Enter Roll Number to display: ";
-            cin >> rollNumber;
-            displayStudent(rollNumber);
-            break;
-        case 4:
-            cout << "Exiting..." << endl;
-            return 0;
-        default:
-            cout << "Invalid choice! Please try again." << endl;
-        }
-    }
+int main()
+{
+    Student obj("Data.txt");
+    obj.writeData();
+    
+    // obj.displaySpecific();
+    obj.deleteR();
+    obj.readR();
     return 0;
 }

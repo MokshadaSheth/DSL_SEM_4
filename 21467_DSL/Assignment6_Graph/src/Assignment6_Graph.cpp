@@ -9,8 +9,6 @@
 //============================================================================
 
 #include <iostream>
-#include <queue>
-#include<vector>
 using namespace std;
 const int MAXSIZE = 20;
 class Node

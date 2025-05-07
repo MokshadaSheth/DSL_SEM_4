@@ -49,7 +49,7 @@ public:
         else if (newNode->keyword > root->keyword) {
             root->right = insertKeyword(root->right, newNode);
         } 
-        else {
+        else {  //Means same keyword that is update
             root->meaning = newNode->meaning;
             delete newNode;
             return root;
@@ -228,14 +228,14 @@ int main() {
             case 4:
                 dictionary.deleteKeyword();
                 break;
+            case 5:
+                cout<<"\nBye!";
+                break;
             default:
                 cout << "Invalid choice." << endl;
         }
 
-        cout << "\nDo you want to continue? (y/n): ";
-        cin >> continueChoice;
-
-    } while (continueChoice == 'y' || continueChoice == 'Y');
+    } while (choice != 5);
 
     return 0;
 }

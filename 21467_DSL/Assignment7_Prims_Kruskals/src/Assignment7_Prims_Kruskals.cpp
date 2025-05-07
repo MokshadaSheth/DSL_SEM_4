@@ -79,8 +79,8 @@ void Graph::displayMatrix()
 // Prim's Algorithm
 void Graph::primsAlgo(int start)
 {
-    int key[MAX_SIZE], parent[MAX_SIZE];
-    bool mstSet[MAX_SIZE];
+    int key[totalVertices], parent[totalVertices];
+    bool mstSet[totalVertices];
 
     for (int i = 0; i < totalVertices; i++)
     {
@@ -90,28 +90,28 @@ void Graph::primsAlgo(int start)
     }
 
     key[start] = 0;
-
+    //In each iteration 1 vertex is added
     for (int count = 0; count < totalVertices - 1; count++)
-    {
+    {   //Set min and u in each iteration
         int min = INT_MAX, u = -1;
 
         for (int v = 0; v < totalVertices; v++)
-        {
-            if (!mstSet[v] && key[v] < min)
+        {  //Note: Basically we are setting min value of key from each new vertex that is added in second for
+            if (!mstSet[v] && key[v] < min)  //The vertes is not in mstSet and if key from previous vertex in min
             {
                 min = key[v];
-                u = v;
+                u = v;    //u = the vertex that has min dist to next vertex not in mstSet
             }
         }
-
-        mstSet[u] = true;
+        //u=0 
+        mstSet[u] = true; //Mark new vertex as present
 
         for (int v = 0; v < totalVertices; v++)
-        {
+        {      //Checking matrix line of new vertex  //Not in mstSet     //is Less than previos value?
             if (adjecencyMatrix[u][v] != INT_MAX && !mstSet[v] && adjecencyMatrix[u][v] < key[v])
             {
-                key[v] = adjecencyMatrix[u][v];
-                parent[v] = u;
+                key[v] = adjecencyMatrix[u][v];  
+                parent[v] = u; //v is col of u row thus it is parent of //That is we are storing path here to go for a vertex
             }
         }
     }

@@ -9,246 +9,221 @@
 // set of telephone numbers.
 //============================================================================
 
-#include <iostream>
-#include <vector>
-#include <string>
+#include<iostream>
+#include<vector>
 using namespace std;
 
-const int Tsize = 10;
-
-class tableStruct
+int Tsize = 10;
+class TableStruct
 {
-	long long number;
-	string name;
-	bool occupied;
+    long long num;
+    string name;
+    bool occupied;
 
-public:
-	tableStruct()
-	{
-		number = -1;
-		name = "";
-		occupied = false;
-	}
-	tableStruct(long long n, string name)
-	{
-		number = n;
-		name = name;
-		occupied = true;
-	}
-	friend class HashTable;
+    public:
+        TableStruct()
+        {
+            num = -1;
+            name = "";
+            occupied = false;
+        }
+        TableStruct(long long n, string na)
+        {
+            num = n;
+            name = na;
+            occupied = true;
+        }
+
+        friend class HashTable;
 };
 
 class HashTable
 {
-	vector<tableStruct> table1;
-	vector<tableStruct> table;
+    vector <TableStruct> withoutReplace;
+    vector <TableStruct> withReplce;
 
-	int hashFunction(long long number)
-	{
-		return number % Tsize;
-	}
+    int hashFunction(long long num)
+    {
+        return num%Tsize;
+    }
 
-public:
-	HashTable()
-	{
-		table.resize(Tsize);
-		table1.resize(Tsize);
-	}
-
-	void insertData();
-	void insertWithoutReplacement(long long n, string name);
-	void insertWithReplacement(long long n, string name);
-	void searchR();
-	void searchInWithoutReplacement(long long n);
-	void searchInWithReplacement(long long n);
+    public:
+        HashTable()
+        {
+            withoutReplace.resize(Tsize);
+            withReplce.resize(Tsize);
+        }
+        void insertD();
+        void insertWithout(long long n, string name);
+        void insertWith(long long n, string name);
+        void search();
+        int searchD(long long n, vector<TableStruct> &t);
 };
 
-void HashTable ::insertData()
+void HashTable :: insertD()
 {
-	long long n;
-	string name;
-	cout << "\nEnter number: ";
-	cin >> n;
-	cout << "\nEnter name: ";
-	cin >> name;
-	cout << "\nInserting using Without Replacement...\n";
-	insertWithoutReplacement(n, name);
-	cout << "\nInserting using With Replacement...\n";
-	insertWithReplacement(n, name);
+    long long n;
+    string name;
+
+    cout<<"\nEnter number: ";
+    cin>>n;
+    cout<<"Enter name: ";
+    cin>>name;
+
+    cout<<"\nInserting Data in Without Replacement:\n";
+    insertWithout(n,name);
+    cout<<"\nInsert Data in With Repalcement: \n";
+    insertWith(n,name);
 }
 
-void HashTable ::insertWithoutReplacement(long long n, string name)
+void HashTable :: insertWithout(long long n, string name)
 {
-	int index = hashFunction(n);
-	int original_index = index;
-	int comparisons = 1;
+    int comparisons = 1;
+    int index = hashFunction(n);
+    int original = index;
 
-	while (table1[index].occupied)
-	{
-		index = (index + 1) % Tsize;
-		comparisons++;
+    while(withoutReplace[index].occupied)
+    {
+        index = (index + 1) % Tsize;
+        comparisons++;
+        if(index == original)
+        {
+            cout<<"\nHashTable is already Full";
+            return;
+        }
+    }
 
-		if (index == original_index)
-		{
-			cout << "\nTable is full!!\n";
-			return;
-		}
-	}
-	table1[index] = tableStruct(n, name);
-	cout << "\nComparisons: " << comparisons << " required to insert data\n";
-	cout << "\nInserted " << name << " at index " << index << endl;
+    withoutReplace[index] = TableStruct(n,name);
+    cout<<"\nTotal comparisons used: "<<comparisons;
+}
+void HashTable :: insertWith(long long n, string name)
+{
+    int comparisons = 1;
+    int index = hashFunction(n);
+    int original = index;
+    bool flag = false;
+    TableStruct temp;
+
+    if(withReplce[index].occupied)
+    {   //Already an element
+        int existing = hashFunction(withReplce[index].num);
+
+        if(index != existing) 
+        {
+            //Wrong ele so replace
+            cout<<"\nReplacing Element\n";
+            temp = withReplce[index];
+            withReplce[index] = TableStruct(n,name);
+
+            index = (index+1)%Tsize; 
+            flag = true;
+        }
+        while(withReplce[index].occupied)
+        {
+            index = (index + 1) % Tsize;
+            comparisons++;
+            if(index == existing)
+            {
+                cout<<"\nHashTable is already Full";
+                return;
+            }
+        }
+        if(flag)
+            withReplce[index] = temp;
+        else
+            withReplce[index] = TableStruct(n,name);
+
+        cout<<"\nComparison: "<<comparisons;
+    }
+    else{
+        //Slot is free
+        withReplce[index] = TableStruct(n,name);
+        cout<<"\nComparison: "<<comparisons;
+    }
 }
 
-void HashTable ::insertWithReplacement(long long n, string name)
+void HashTable :: search()
 {
-	int index = hashFunction(n);
-	int original_index = index;
-	int comparisons = 1;
+    cout<<"\nEnter number to be searched: ";
+    long long n;
+    cin>>n;
 
-	// If position occupied
-	if (table[index].occupied)
-	{
-		int existingIndex = hashFunction(table[index].number);
-
-		if (existingIndex != index)
-		{
-			// Replace the current data at that index
-			tableStruct temp = table[index]; // Store existing
-			table[index] = tableStruct(n, name);
-
-			cout << "\nReplaced " << temp.name << " with " << name << endl;
-
-			// Find new place
-			int newIndex = (index + 1) % Tsize;
-			comparisons++;
-			while (table[newIndex].occupied)
-			{
-				newIndex = (newIndex + 1) % Tsize;
-				comparisons++;
-				if (newIndex == index)
-				{
-					cout << "\nHash Table is full!!";
-					return;
-				}
-			}
-			table[newIndex] = temp;
-			cout << "\nMoved" << temp.name << " to index " << newIndex << endl;
-		}
-		else // existing is equal to index
-		{
-			int newIndex = (index + 1) % Tsize;
-			comparisons++;
-			while (table[newIndex].occupied)
-			{
-				newIndex = (newIndex + 1) % Tsize;
-				comparisons++;
-				if (newIndex == index)
-				{
-					cout << "\nHash Table is full!!";
-					return;
-				}
-			}
-			table[newIndex] = tableStruct(n, name);
-			cout << "\nInserted " << name << " at index " << index << endl;
-		}
-	}
-	else
-	{
-		table[index] = tableStruct(n, name);
-		cout << "\nInserted " << name << " at index " << index << endl;
-	}
-	cout << "\nComparisons: " << comparisons << " to insert " << name << endl;
+    cout<<"\nSearching in Without Replacement:\n";
+    int ans = searchD(n,withoutReplace);
+    if(ans == -1)
+    {
+        cout<<"\nNot in HashTable";
+    }
+    else{
+        cout<<"--------------------------------\nWithout Repelacement Comparisons:"<<ans;
+    }
+    cout<<"\nSearching in With Replace: \n";
+    ans = searchD(n,withReplce);
+    if(ans == -1)
+    {
+        cout<<"\nNot in HashTable";
+    }
+    else{
+        cout<<"--------------------------------\nWith Repelacement Comparisons:"<<ans;
+    }
 }
-void HashTable ::searchR()
-{
-	long long n;
-	cout << "\nEnter number to search: ";
-	cin >> n;
-	cout << "\nSearching in Without Replacement Table...\n";
-	searchInWithoutReplacement(n);
-	cout << "\nSearching in With Replacement Table...\n";
-	searchInWithReplacement(n);
-}
-void HashTable ::searchInWithoutReplacement(long long n)
-{
-	int index = hashFunction(n);
-	int comparisons = 1;
-	int originalIndex = index;
 
-	while (true)
-	{
-		if (table1[index].number == n)
-		{
-			cout << "\nFound at index " << index << " name: " << table1[index].name;
-			cout << "Comparisons: " << comparisons << endl;
-			return;
-		}
-		else
-		{
-			index = (index + 1) % Tsize;
-			comparisons++;
-			if (index == originalIndex)
-			{
-				cout << "\nNumber is not present in Hash Table\n";
-				return;
-			}
-		}
-	}
-}
-void HashTable ::searchInWithReplacement(long long n)
+int HashTable  :: searchD(long long n, vector<TableStruct> &t)
 {
-	int index = hashFunction(n);
-	int comparisons = 1;
-	int originalIndex = index;
+    int index = hashFunction(n);
+    int org = index;
+    int comparison = 1;
 
-	while (true)
-	{
-		if (table[index].number == n)
-		{
-			cout << "\nFound at index " << index << " name: " << table[index].name;
-			cout << "Comparisons: " << comparisons << endl;
-			return;
-		}
-		else
-		{
-			index = (index + 1) % Tsize;
-			comparisons++;
-			if (index == originalIndex)
-			{
-				cout << "\nNumber is not present in Hash Table\n";
-				return;
-			}
-		}
-	}
+
+    if(t[index].num == n)
+    {
+        return comparison;
+    }
+    else{
+        while(t[index].occupied)
+        {
+            index = (index + 1) % Tsize;
+            comparison++;
+            if(index == org)
+            {
+                cout<<"\nNo such number";
+                return -1;
+            }
+            if(t[index].num == n)
+            {
+                return comparison;
+            }
+        }
+        return -1;
+    }
 }
 
 int main()
 {
-	int choice;
-	HashTable obj;
-	do
-	{
-		cout << "\n1.Insert Data\n2.Search number\n3.Exit\n\nEnter choice code: ";
-		cin >> choice;
+    int choice;
+    bool t = true;
+    HashTable obj;
+    while(t)
+    {
+        cout<<"\n1.Insert Data\n2.Search Data\n3.Delete";
+        cout<<"\nEnter choice code:";
+        cin>>choice;
 
-		switch (choice)
-		{
-		case 1:
-			obj.insertData();
-			break;
-		case 2:
-			obj.searchR();
-			break;
-		case 3:
-			cout<<"\nByee";
-			break;
-
-		default:
-			cout<<"\nInvalid ip";
-			break;
-		}
-
-	} while (choice != 3);
-
-	return 0;
+        switch(choice)
+        {
+            case 1:
+                obj.insertD();
+                break;
+            case 2:
+                obj.search();
+                break;
+            case 3:
+                cout<<"\nByee";
+                t = false;
+                break;
+            default:
+                cout<<"\nInvalid ip";
+                break;
+        }
+    }
 }
